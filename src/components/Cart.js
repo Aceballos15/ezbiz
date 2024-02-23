@@ -1,8 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { formatNumber } from '../helpers/formatNumbers';
 
-export const Cart = ({productsCart, setProductsCart}) => {
+export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, total, setTotal}) => {
     // const [listCart, setListCart] = useState([]);
-        
+    
+
     const closeCart = () => {
         const cart = document.querySelector("#cart");
         const trama = document.querySelector(".trama");
@@ -21,25 +23,124 @@ export const Cart = ({productsCart, setProductsCart}) => {
 
         setProductsCart(products_cart);
 
-    console.log(productsCart);
+        console.log(productsCart);
     } 
 
     const deleteProductCart = (id) => {
 
-        let producs_cart = JSON.parse(localStorage.getItem("product"));
-
         let new_products_cart = productsCart.filter( (product) => product.ID !== id );
-
-        setProductsCart(new_products_cart);
         
-
-        console.log();
-    
+        setProductsCart(new_products_cart);
+        localStorage.setItem('product', JSON.stringify(new_products_cart));
+           
     }
+
+    const increaseQuantity = (e,id) => {
+
+        /* let search_index_product = productsCart.findIndex( (product) => product.ID === id );
+        let list_products = productsCart;
+        list_products[search_index_product].quantity += 1;
+        setProductsCart(list_products);
+        console.log(list_products); */
+        let subtotal = 0;
+        let total = 0;
+
+    
+       let new_products_cart = productsCart.filter( (product) =>{
+            if (product.ID === id) {
+                product.quantity++;
+                product.precio = parseInt(product.Precio_Mayorista) * product.quantity;
+            }
+
+            subtotal += product.precio;
+            total += product.precio;
+        return product.ID !== null;
+       });
+
+
+       setSubtotal(subtotal);
+       setTotal(total);
+        setProductsCart(new_products_cart);
+        localStorage.setItem('product', JSON.stringify(new_products_cart));
+       
+
+    }
+
+    const reduceQuantity = (e,id) => {
+
+        let subtotal = 0;
+        let total = 0;
+
+        let new_products_cart = productsCart.filter( (product) =>{
+            if (product.ID === id && product.quantity > 1) {
+                product.quantity--;
+                product.precio = parseInt(product.Precio_Mayorista) * product.quantity;
+                
+            }
+        
+            subtotal += product.precio;
+            total += product.precio;
+
+        return product.ID !== null;
+       });
+        
+        setSubtotal(subtotal);
+        setTotal(total);
+        setProductsCart(new_products_cart);
+        localStorage.setItem('product', JSON.stringify(new_products_cart));
+    }
+
+    const modifyQuantity = (e, id) => {
+        let subtotal = 0;
+        let total = 0;
+        let input_value = e.target.value;
+
+        let new_products_cart = productsCart.filter( (product) => {
+
+            if (product.ID === id) {
+                product.quantity = input_value;
+                
+                if (product.quantity > 0) {
+                    
+                    product.precio = parseInt(product.Precio_Mayorista) * product.quantity;
+                    
+                }else if(product.quantity.length === 0){
+                    
+                    product.precio = parseInt(product.Precio_Mayorista);
+                }
+            }
+
+            subtotal += product.precio;
+            total += product.precio;
+            
+            return product.ID !== null;
+
+        });
+
+        setSubtotal(subtotal);
+       setTotal(total);
+        setProductsCart(new_products_cart);
+        localStorage.setItem('product', JSON.stringify(new_products_cart));
+
+    }
+
 
     useEffect( () => {
         getListCart();
-    }, [])
+
+        let total = 0;
+        let subtotal = 0;
+        let products_cart = JSON.parse(localStorage.getItem('product'));
+
+        products_cart.map( product => {
+            subtotal += product.precio; 
+            total += product.precio; 
+        });
+        
+        setSubtotal(subtotal);
+        setTotal(total);
+
+    }, []);
 
 
     return (
@@ -73,7 +174,7 @@ export const Cart = ({productsCart, setProductsCart}) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productsCart !== null && (
+                                {productsCart && productsCart.length !== 0 && (
                                     productsCart.map(product => {
                                     
                                         return (
@@ -91,21 +192,21 @@ export const Cart = ({productsCart, setProductsCart}) => {
                                                 <td>
                                                     <div className="cart__quantity">
 
-                                                        <div className="cart__operation cart__minus" id="minus">
+                                                        <div className="cart__operation cart__minus" id="minus" onClick={(e) => reduceQuantity(e,product.ID)}>
                                                             <i className="fa-solid fa-minus"></i>
                                                         </div>
 
-                                                        <input type="text" className="cart__input-quantity" id="quantity" />
+                                                        <input type="text" className="cart__input-quantity" id="quantity" onChange={(e) => modifyQuantity(e,product.ID)} value={product.quantity} />
 
-                                                        <div className="cart__operation cart__plus" id="plus">
+                                                        <div className="cart__operation cart__plus" id="plus" onClick={(e) => increaseQuantity(e,product.ID)}>
                                                             <i className="fa-solid fa-plus"></i>
 
                                                         </div>
                                                     </div>
                                                 </td>
-                                                <td className="text-center">{product.Precio_Mayorista}</td>
+                                                <td className="text-center">{formatNumber(product.precio, true)}</td>
                                                 <td className="text-center "> 
-                                                    <div className="cart__delete" id={product.ID}>
+                                                    <div className="cart__delete" id={product.ID} onClick={ () => deleteProductCart(product.ID) }>
                                                         <i className="fa-solid fa-xmark"></i> 
                                                     </div>
                                                 </td>
@@ -127,9 +228,9 @@ export const Cart = ({productsCart, setProductsCart}) => {
                             </div>
                             <div className="cart__body-card">
                                 <div className="cart__cont-total">
-                                    <p>Subtotal: <span className="text-bold"> $1.200.000 </span></p> 
-                                    <p>Costo de envío: <span className="text-bold"> $20.000 </span></p>
-                                    <p className="cart__total">Total:  <span>$1.220.000 COP </span></p>
+                                    <p>Subtotal: <span className="text-bold"> {formatNumber(subtotal, true)} </span></p> 
+                                    {/* <p>Costo de envío: <span className="text-bold"> $20.000 </span></p> */}
+                                    <p className="cart__total">Total:  <span>{formatNumber(total, true)} </span></p>
                                 </div>
 
                                 <div className="cart__methods">

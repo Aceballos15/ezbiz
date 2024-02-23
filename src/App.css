@@ -449,6 +449,7 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 }
 
 
@@ -488,6 +489,8 @@ img {
 
 .cart__delete {
     font-size: 1.4rem;
+    color: var(--red);
+    cursor: pointer;
 }
 
 .cart__card {

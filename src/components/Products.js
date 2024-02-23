@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 
-export const Products = ({productsCart, setProductsCart}) => {
+export const Products = ({productsCart, setProductsCart, setSubtotal, setTotal}) => {
     const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
     const [products, setProducts] = useState([]);
+    
 
-    const saveLocalStorage = async(id) => {
+    const addProductCart = async(id) => {
 
         let URL_API = URL_BASE + '%26%26ID%3D' + id;
         let product_api = await fetch(URL_API);
@@ -15,6 +16,9 @@ export const Products = ({productsCart, setProductsCart}) => {
 
         let listCart = JSON.parse(localStorage.getItem('product'));
 
+        product_data[0].quantity = 1;
+        product_data[0].precio = parseInt(product_data[0].Precio_Mayorista);
+
         if (Array.isArray(listCart)) {
 
             listCart.push(product_data[0]);
@@ -22,12 +26,17 @@ export const Products = ({productsCart, setProductsCart}) => {
             localStorage.setItem('product', JSON.stringify(listCart));
             setProductsCart(listCart);
 
+            listCart.map( product => {
+                
+            });
+
+
         }else{
             localStorage.setItem('product', JSON.stringify([product_data[0]]));
             setProductsCart([product_data[0]]);
         }
 
-        
+        console.log(product_data);
     }
 
 
@@ -39,14 +48,14 @@ export const Products = ({productsCart, setProductsCart}) => {
     
             const products_data = await products_api.json();
 
-            setProducts( await products_data);
+            setProducts(await products_data);
         }
 
         getProductsAPI();
 
     },[])
 
-    console.log(products);
+    
   return (
     <>
       <section className="banner">
@@ -89,7 +98,7 @@ export const Products = ({productsCart, setProductsCart}) => {
                     </div>
                     <div className="col col-75">
                         <div className="row">
-                            { products !== null && (
+                            {products && products.length !== 0 && (
                                 products.map( product => {
                                     return(
                                         <div className="col col-33" key={product.id} id={product.ID}>
@@ -120,7 +129,7 @@ export const Products = ({productsCart, setProductsCart}) => {
                                                 <div className="products__options">
                                                     <button className="btn btn-blue">Comprar</button>
 
-                                                    <div className="products__add-product" id={product.ID} onClick={() => saveLocalStorage(product.ID)}>
+                                                    <div className="products__add-product" id={product.ID} onClick={() => addProductCart(product.ID)}>
                                                         <img src="./img/cart-product.png" alt="" />
                                                     </div>
                                                 </div>

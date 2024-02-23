@@ -7,6 +7,8 @@ import { Cart } from '../components/Cart'
 
 export const MainRouter = () => {
     const [productsCart, setProductsCart] = useState([]);
+    const [subtotal, setSubtotal] = useState("");
+    const [total, setTotal] = useState("");
 
     return (
       <BrowserRouter>
@@ -15,12 +17,12 @@ export const MainRouter = () => {
   
           <main>
               <Routes>
-                  <Route path='/' element={<Products setProductsCart={setProductsCart} />} />
+                  <Route path='/' element={<Products setProductsCart={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal} />} />
               </Routes>
           </main>
   
           <Footer />
-          <Cart productsCart={productsCart} setProductsCart={setProductsCart} />
+          <Cart productsCart={productsCart} setProductsCart={setProductsCart} subtotal={subtotal} setSubtotal={setSubtotal} total={total} setTotal={setTotal} />
   
       </BrowserRouter>
   
