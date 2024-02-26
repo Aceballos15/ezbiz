@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { formatNumber } from '../helpers/formatNumbers';
 
-export const ProductsCategory = ({id = '',productsCart, setProductsCart, setSubtotal, setTotal}) => {
+export const ProductsCategory = ({id = '', setProductsCart, setSubtotal, setTotal, products, setProducts}) => {
     
     const URL_BASE = id !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22%26GrupoDeProductos.ID%3D%22" + id + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
     
-    console.log(URL_BASE);
-    const [products, setProducts] = useState([]);
-
+    
     const addProductCart = async(id) => {
 
         let URL_API = URL_BASE + '%26%26ID%3D' + id;
@@ -61,14 +60,16 @@ export const ProductsCategory = ({id = '',productsCart, setProductsCart, setSubt
             const products_api = await fetch(URL_BASE);
     
             const products_data = await products_api.json();
-
-            setProducts(await products_data);
+            
+            setProducts(await products_data)
+               
         }
 
         getProductsAPI();
      
 
     },[]);
+
 
   return (
     <>
@@ -87,7 +88,7 @@ export const ProductsCategory = ({id = '',productsCart, setProductsCart, setSubt
                                 <div className="products__cont-price-cart">
                                     <div className="products__cont-price">
                                         {/* Cambiar para mas adelante el precio del producto */}
-                                        <span className="products__price">${product.Precio_Mayorista} COP</span>
+                                        <span className="products__price">{formatNumber(product.Precio_Mayorista, true) } COP</span>
                                         <span className="products__price-before">$79.900 COP</span>
                                     </div>
                                     

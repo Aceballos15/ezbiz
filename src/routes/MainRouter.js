@@ -10,13 +10,13 @@ import { ProductsCategory } from '../components/ProductsCategory'
 export const MainRouter = () => {   
 
     const URL_BASE_GROUP = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/GrupoDeProductos_Report?where=ID%3D1889220000051935384";
-
+   
     const [productsCart, setProductsCart] = useState([]);
     const [subtotal, setSubtotal] = useState("");
     const [total, setTotal] = useState("");
 
     const [groupProducts, setGroupProducts] = useState([]);
-
+    const [products, setProducts] = useState("");
     //Cargar los productos de 1 hora desde la API
     useEffect( () => {
         const getGroupProductsAPI = async() => {
@@ -31,24 +31,27 @@ export const MainRouter = () => {
 
     },[]);
 
+
     return (
       <BrowserRouter>
   
-          <Header total={total}/>
+          <Header total={total} products={products} setProducts={setProducts}/>
   
           <main>
               <Routes>
                   <Route path='/' element={<Products  groupProducts={groupProducts} />} >
-                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal} />}/>
+                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} />}/>
                         { groupProducts && groupProducts.length !== 0 && (
                             groupProducts.map( group => {
                                 return (
                                     <>
-                                        <Route path={group.Description} element={<ProductsCategory id={group.ID} setProductsCart={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal} />}/>
+                                        <Route path={group.Description} element={<ProductsCategory id={group.ID} setSubtotal={setSubtotal} setTotal={setTotal}  products={products} setProducts={setProducts}/>} />
                                     </>
                                 )
                             } )
                         ) }
+
+                        
                         
                     </Route>
               </Routes>
