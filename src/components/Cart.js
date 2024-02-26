@@ -29,9 +29,19 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
     const deleteProductCart = (id) => {
 
         let new_products_cart = productsCart.filter( (product) => product.ID !== id );
+        let total = 0;
+        let subtotal = 0;
         
         setProductsCart(new_products_cart);
         localStorage.setItem('product', JSON.stringify(new_products_cart));
+
+        new_products_cart.map(product => {
+            total += product.precio;
+            subtotal += product.precio;
+        });
+
+        setTotal(total);
+        setSubtotal(subtotal);
            
     }
 
@@ -49,7 +59,10 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
        let new_products_cart = productsCart.filter( (product) =>{
             if (product.ID === id) {
                 product.quantity++;
-                product.precio = parseInt(product.Precio_Mayorista) * product.quantity;
+                if (product.quantity > 0) {
+
+                    product.precio = parseInt(product.Precio_Mayorista) * product.quantity;
+                }
             }
 
             subtotal += product.precio;
@@ -174,7 +187,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                                 </tr>
                             </thead>
                             <tbody>
-                                {productsCart && productsCart.length !== 0 && (
+                                {productsCart && productsCart.length !== 0 ? (
                                     productsCart.map(product => {
                                     
                                         return (
@@ -214,6 +227,10 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
                                         )
                                     })
+                                ) : ( 
+                                    <tr>
+                                        <td colspan="4" className='text-center'>El carrito esta vacío</td>
+                                    </tr> 
                                 )}
                                 
                             
@@ -221,6 +238,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
                         </table>
                     </div>
+                         
                     <div className="col col-33">
                         <div className="cart__card">
                             <div className="cart__header-card">
@@ -242,25 +260,28 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
                                     </div>
                                 </div>
+                                {productsCart && productsCart.length !== 0 && (
+                                    <>
+                                    <div className="cart__data-user">
+                                        <p>Ingresa los siguientes datos para continuar</p>
+                                        <form action="" className="form__data-cart">
+                                            <select className="form-control">
+                                                <option value="">Tipo</option>
+                                                <option value="">C.C</option>
+                                                <option value="">T.I</option>
+                                            </select>
 
-                                <div className="cart__data-user">
-                                    <p>Ingresa los siguientes datos para continuar</p>
-                                    <form action="" className="form__data-cart">
-                                        <select className="form-control">
-                                            <option value="">Tipo</option>
-                                            <option value="">C.C</option>
-                                            <option value="">T.I</option>
-                                        </select>
-
-                                        <input type="text" className="form-control" placeholder="Número de documento"/>
+                                            <input type="text" className="form-control" placeholder="Número de documento"/>
+                                            
+                                        </form>
                                         
-                                    </form>
+                                    </div>
                                     
-                                </div>
-                                <div className="cart__cont-next">
-                                    <a href="/" className="btn btn-blue"> Continuar </a>
-                                </div>
-                                
+                                        <div className="cart__cont-next">
+                                            <a href="/" className="btn btn-blue"> Continuar </a>
+                                        </div>
+                                    </>
+                                )}
                             </div>
                         </div>
                     </div>

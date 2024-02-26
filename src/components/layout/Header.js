@@ -1,6 +1,7 @@
 import React from 'react'
+import { formatNumber } from '../../helpers/formatNumbers';
 
-export const Header = () => {
+export const Header = ({total}) => {
   // Abrir la sección del carrito 
   const openCart = () => {
 
@@ -38,7 +39,7 @@ return (
                         </div>
                         <div className="header__text-cart">
                             <span>Tu carrito</span>
-                            <span className="header__price-cart">$0.00 COP</span>
+                            <span className="header__price-cart">{formatNumber(total, true)} COP</span>
                         </div>
                     </div>
                     

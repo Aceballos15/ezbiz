@@ -1,60 +1,15 @@
 import React, { useEffect, useState } from 'react'
+import { NavLink, Outlet } from 'react-router-dom';
 
-export const Products = ({productsCart, setProductsCart, setSubtotal, setTotal}) => {
-    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+export const Products = ({groupProducts}) => {
 
-    const [products, setProducts] = useState([]);
-    
-
-    const addProductCart = async(id) => {
-
-        let URL_API = URL_BASE + '%26%26ID%3D' + id;
-        let product_api = await fetch(URL_API);
-        let product_data = await product_api.json();
-        
-        console.log(product_data);
-
-        let listCart = JSON.parse(localStorage.getItem('product'));
-
-        product_data[0].quantity = 1;
-        product_data[0].precio = parseInt(product_data[0].Precio_Mayorista);
-
-        if (Array.isArray(listCart)) {
-
-            listCart.push(product_data[0]);
-
-            localStorage.setItem('product', JSON.stringify(listCart));
-            setProductsCart(listCart);
-
-            listCart.map( product => {
-                
-            });
-
-
-        }else{
-            localStorage.setItem('product', JSON.stringify([product_data[0]]));
-            setProductsCart([product_data[0]]);
+    const linkActive = (isActive) => {
+        if (isActive) {
+            return "btn btn-category active";
         }
 
-        console.log(product_data);
+        return "btn btn-category";
     }
-
-
-    //Cargar los productos de 1 hora desde la API
-    useEffect( () => {
-        
-        const getProductsAPI = async() => {
-            const products_api = await fetch(URL_BASE);
-    
-            const products_data = await products_api.json();
-
-            setProducts(await products_data);
-        }
-
-        getProductsAPI();
-
-    },[])
-
     
   return (
     <>
@@ -85,62 +40,28 @@ export const Products = ({productsCart, setProductsCart, setSubtotal, setTotal})
             <div className="container">
                 <div className="row">
                     <div className="col col-25">
-                        <div className="products__category">
+                         <div className="products__category">
                             <h3 className="title">Categoría</h3>
                             <div className="products__cont-categories">
-                                <a href="/" className="btn btn-category active">Todas</a>
-                                <a href="/" className="btn btn-category ">Audífonos</a>
-                                <a href="/" className="btn btn-category ">Bocinas</a>
-                                <a href="/" className="btn btn-category ">Cargadores</a>
-
-                            </div>
+                            <NavLink to='/' className={ ({isActive}) => linkActive(isActive)}> Todas </NavLink>
+                        
+                        { groupProducts && groupProducts.length !== 0 && ( 
+                            groupProducts.map( group => {
+                                return (
+                                    <>
+                                        <NavLink to={group.Description} className={ ({isActive}) => linkActive(isActive)}> {group.Description} </NavLink>
+                
+                                    </> 
+                                )          
+                            })
+                         )}
+                          </div>
                         </div>
                     </div>
                     <div className="col col-75">
                         <div className="row">
-                            {products && products.length !== 0 && (
-                                products.map( product => {
-                                    return(
-                                        <div className="col col-33" key={product.id} id={product.ID}>
-                                            <article className="products__card-product">
-                                                <div className="products__card-img">
-                                                    <img src={product.Imagen_publica.url} alt=""/>
-                                                </div>
-                                                <div className="products__card-description">
-                                                    <span className="products__type">{product.GrupoDeProductos.Description}</span>
-                                                    <h3 className="products__title">{product.Referencia}</h3>
-                                                    
-                                                    <div className="products__cont-price-cart">
-                                                        <div className="products__cont-price">
-                                                            {/* Cambiar para mas adelante el precio del producto */}
-                                                            <span className="products__price">${product.Precio_Mayorista} COP</span>
-                                                            <span className="products__price-before">$79.900 COP</span>
-                                                        </div>
-                                                        
-                                                    </div>
-
-                                                    
-                                                </div>
-                    
-                                                <div className="products__discounts">
-                                                    <span>-37% OFF</span>
-                                                </div>
-
-                                                <div className="products__options">
-                                                    <button className="btn btn-blue">Comprar</button>
-
-                                                    <div className="products__add-product" id={product.ID} onClick={() => addProductCart(product.ID)}>
-                                                        <img src="./img/cart-product.png" alt="" />
-                                                    </div>
-                                                </div>
-
-                                            </article>
-                                        </div>
-                                    )
-                                })
-                            )}
                             
-                            
+                            <Outlet />
                             
                         </div>
                         
