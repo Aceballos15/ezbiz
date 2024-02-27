@@ -15,7 +15,6 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
         let total = 0;
         let subtotal = 0;
         
-        console.log(product_data);
 
         let listCart = JSON.parse(localStorage.getItem('product'));
 
@@ -51,7 +50,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
 
         setTotal(total);
         setSubtotal(subtotal);
-        console.log(product_data);
+      
     } 
 
   return (
