@@ -49,7 +49,7 @@ export const Products = ({groupProducts}) => {
                             groupProducts.map( group => {
                                 return (
                                     <>
-                                        <NavLink to={group.Description} className={ ({isActive}) => linkActive(isActive)}> {group.Description} </NavLink>
+                                        <NavLink to={group} className={ ({isActive}) => linkActive(isActive)}> {group} </NavLink>
                 
                                     </> 
                                 )          

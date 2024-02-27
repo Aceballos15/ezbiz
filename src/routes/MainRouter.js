@@ -9,8 +9,9 @@ import { ProductsCategory } from '../components/ProductsCategory'
 
 export const MainRouter = () => {   
 
-    const URL_BASE_GROUP = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/GrupoDeProductos_Report?where=ID%3D1889220000051935384";
-   
+    //const URL_BASE_GROUP = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/GrupoDeProductos_Report?where=ID%3D1889220000051935384";
+    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+
     const [productsCart, setProductsCart] = useState([]);
     const [subtotal, setSubtotal] = useState("");
     const [total, setTotal] = useState("");
@@ -20,14 +21,30 @@ export const MainRouter = () => {
     //Cargar los productos de 1 hora desde la API
     useEffect( () => {
         const getGroupProductsAPI = async() => {
-            const group_products_api = await fetch(URL_BASE_GROUP);
+            const group_products_api = await fetch(URL_BASE);
     
             const group_products_data = await group_products_api.json();
 
-            setGroupProducts(await group_products_data);
+            let categories = [];
+            group_products_data.map(group => {
+                categories.push(group.Tipo.Nombre);
+            });
+
+            categories = [...new Set(categories)];
+            setGroupProducts(categories);
         }
    
         getGroupProductsAPI();
+
+        const getProductsAPI = async() => {
+            const products_api = await fetch(URL_BASE);
+
+            const products_data = await products_api.json();
+            
+            setProducts(await products_data);    
+        }
+
+        getProductsAPI();
 
     },[]);
 
@@ -43,16 +60,21 @@ export const MainRouter = () => {
                         <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} />}/>
                         { groupProducts && groupProducts.length !== 0 && (
                             groupProducts.map( group => {
+                                let new_products = [];
+                                
+                                products.map(product => {
+                                    if (product.Tipo.Nombre === group) {
+                                        new_products.push(product);
+                                    }
+                                });
+
                                 return (
                                     <>
-                                        <Route path={group.Description} element={<ProductsCategory id={group.ID} setSubtotal={setSubtotal} setTotal={setTotal}  products={products} setProducts={setProducts}/>} />
+                                        <Route path={group} element={<ProductsCategory category={group} setProductsCar={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts}/>} />
                                     </>
                                 )
                             } )
-                        ) }
-
-                        
-                        
+                        ) }   
                     </Route>
               </Routes>
           </main>

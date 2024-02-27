@@ -26,7 +26,7 @@ const searchProducts = (e) => {
 
 
     let search_product = e.target.value.toLowerCase();
-        console.log(search_product);
+        
         if (search_product !== '' && search_product.length !== 0) {
 
             let new_products_data = [];

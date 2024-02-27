@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
+import { Products } from './Products';
 
-export const ProductsCategory = ({id = '', setProductsCart, setSubtotal, setTotal, products, setProducts}) => {
+export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts}) => {
     
-    const URL_BASE = id !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22%26GrupoDeProductos.ID%3D%22" + id + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
-    
-    
+    let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+
     const addProductCart = async(id) => {
 
         let URL_API = URL_BASE + '%26%26ID%3D' + id;
@@ -52,24 +52,7 @@ export const ProductsCategory = ({id = '', setProductsCart, setSubtotal, setTota
         setTotal(total);
         setSubtotal(subtotal);
         console.log(product_data);
-    }
-
-    useEffect( () => {
-        
-        const getProductsAPI = async() => {
-            const products_api = await fetch(URL_BASE);
-    
-            const products_data = await products_api.json();
-            
-            setProducts(await products_data)
-               
-        }
-
-        getProductsAPI();
-     
-
-    },[]);
-
+    } 
 
   return (
     <>
