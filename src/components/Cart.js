@@ -23,7 +23,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
         setProductsCart(products_cart);
 
-        console.log(productsCart);
+        
     } 
 
     const deleteProductCart = (id) => {
