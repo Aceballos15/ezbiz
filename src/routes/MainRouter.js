@@ -12,12 +12,12 @@ export const MainRouter = () => {
     //const URL_BASE_GROUP = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/GrupoDeProductos_Report?where=ID%3D1889220000051935384";
     const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
-    const [productsCart, setProductsCart] = useState([]);
+    const [productsCart, setProductsCart] = useState(false);
     const [subtotal, setSubtotal] = useState("");
     const [total, setTotal] = useState("");
 
     const [groupProducts, setGroupProducts] = useState([]);
-    const [products, setProducts] = useState("");
+    const [products, setProducts] = useState(false);
     //Cargar los productos de 1 hora desde la API
     useEffect( () => {
         const getGroupProductsAPI = async() => {

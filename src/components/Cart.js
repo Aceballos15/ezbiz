@@ -143,7 +143,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
         let total = 0;
         let subtotal = 0;
-        let products_cart = JSON.parse(localStorage.getItem('product'));
+        let products_cart = localStorage.getItem('product') ? JSON.parse(localStorage.getItem('product')) : [];
 
         products_cart.map( product => {
             subtotal += product.precio; 
