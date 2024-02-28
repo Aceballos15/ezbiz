@@ -73,6 +73,13 @@ img {
     font-weight: bold;
 }
 
+.text-error {
+    font-size: 0.9rem;
+    color: var(--red);
+    margin: 0.5rem 0;
+} 
+
+
 .btn {
     text-decoration: none;
     padding: 1rem;
@@ -142,6 +149,87 @@ img {
     margin: 1rem;
     outline: none;
     
+}
+
+.alert {
+    position: fixed;
+    top: 2rem;
+    right: 1rem;
+    padding: 1.3rem 1.5rem;
+    background-color: var(--white);
+    z-index: 2000;
+    border-left: 5px solid var(--dark-blue);
+    border-radius: 10px;
+   /*  translate: ; */
+    overflow: hidden;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+    transform: translateX(calc(100% + 1rem));
+    transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.35);
+}
+
+.alert.active {
+    transform: translateX(0);
+}
+
+.alert-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert i {
+    font-size: 1.6rem;
+   
+}
+
+.alert i.blue {
+    color: var(--dark-blue);
+}
+
+.alert i.red {
+    color: var(--red); 
+}
+
+.alert span {
+    display: block;
+}
+
+.alert span:first-child {
+    font-size: 1.1rem;
+}
+
+.alert-progress {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background-color: var(--dark-blue);
+    display: none;
+}
+
+.alert-progress.active {
+    animation: progress 4s linear forwards;
+}
+
+.alert-close {
+    position: absolute;
+    top: 0.5rem;
+    right: 1rem;
+    cursor: pointer;
+}
+
+.alert-close i {
+    font-size: 1rem;
+    color: #000;
+}
+
+
+
+@keyframes progress {
+    100% {
+        width: 0%;
+    }
 }
 
 /* Estilos específicos */
@@ -572,6 +660,13 @@ img {
 .cart__cont-next {
     display: flex;
     justify-content: center;
+}
+
+.cart__cont-next input{
+    display: inline-block;
+    padding: 0;
+    display: inline !important;
+    width: 20% !important;
 }
 
 /* ============ FOOTER ========= */

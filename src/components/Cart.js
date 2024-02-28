@@ -3,6 +3,12 @@ import { formatNumber } from '../helpers/formatNumbers';
 
 export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, total, setTotal}) => {
     // const [listCart, setListCart] = useState([]);
+
+    const URL_CLIENTS = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report";
+
+    const [clients, setClients] = useState([]);
+    const [alertSuccess, setAlertSuccess] = useState('');
+    const [error, setError] = useState('');
     
 
     const closeCart = () => {
@@ -137,6 +143,95 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
     }
 
+    const verifyUser = (e) => {
+       
+
+        e.preventDefault();
+        let id = e.target.id.value;
+
+        
+        let exist = false;
+        let errorMessage = '';
+
+        if ( id.length === 0 ) {
+            errorMessage = 'Campo vacío, ingresa tu documento';
+            console.log("vacio");
+        }
+
+        if (id.length > 11) {
+            errorMessage = 'El campo no puede tener más de 11 dígitos';
+            console.log("mayor");
+        }
+
+        setAlertSuccess(false);
+
+      fetch(URL_CLIENTS + `?where=Documento.contains(%22${id}%22)`)
+      .then(response => response.json())
+      .then(data => {
+
+        if (errorMessage.length === 0) {
+            
+            if (data.length !== undefined) {
+                data.map(client => {
+                    if (client.Documento === id) {
+                        exist = true;
+                        
+                    }   
+                });
+            }
+             
+
+             if (exist) {
+                setAlertSuccess(true); 
+             }
+  
+             const alert = document.querySelector('.alert');
+             const progress = document.querySelector('.alert-progress');
+     
+             alert.classList.add('active');
+             progress.classList.add('active');
+     
+             setTimeout( () => {
+                 alert.classList.remove('active');  
+                 progress.classList.remove('active');         
+             }, 4000)
+
+             setError('');
+
+            
+        }
+
+
+      }).catch(error => {
+            setAlertSuccess(false);
+            
+            console.log(error);
+      });
+
+      setError(errorMessage);
+    }
+
+    
+    /* const getClientsAPI = async(id) => {
+        const clients_api = await fetch(URL_CLIENTS + `?where=Documento.contains(%22${id}%22)`);
+
+        const clients_data = await clients_api.json();
+        
+        setClients(await clients_data);    
+
+        console.log(URL_CLIENTS);
+    } */
+
+
+
+    const closeAlert = () => {
+
+        const alert = document.querySelector('.alert');
+        const progress = document.querySelector('.alert-progress');
+
+        alert.classList.remove('active');
+        progress.classList.remove('active'); 
+    }
 
     useEffect( () => {
         getListCart();
@@ -153,6 +248,8 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         setSubtotal(subtotal);
         setTotal(total);
 
+
+        //getClientsAPI();
     }, []);
 
 
@@ -264,22 +361,30 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                                     <>
                                     <div className="cart__data-user">
                                         <p>Ingresa los siguientes datos para continuar</p>
-                                        <form action="" className="form__data-cart">
-                                            <select className="form-control">
-                                                <option value="">Tipo</option>
-                                                <option value="">C.C</option>
-                                                <option value="">T.I</option>
-                                            </select>
+                                        <form onSubmit={verifyUser}>
+                                            <div className='form__data-cart'>
 
-                                            <input type="text" className="form-control" placeholder="Número de documento"/>
-                                            
+                                                <select className="form-control" name='type_document'>
+                                                    <option value="">Tipo</option>
+                                                    <option value="">C.C</option>
+                                                    <option value="">T.I</option>
+                                                </select>
+
+                                                <div className='text-center'>
+                                                    <input type="text" className="form-control" name='id' placeholder="Número de documento" max='11'/>
+                                                    <span className="text-error">{error}</span>
+                                                </div>
+                                                
+                                            </div>
+
+                                            <div className="cart__cont-next">
+                                                <button type='submit' className="btn btn-blue">Continuar</button>
+                                             </div>
                                         </form>
                                         
                                     </div>
                                     
-                                        <div className="cart__cont-next">
-                                            <a href="/" className="btn btn-blue"> Continuar </a>
-                                        </div>
+                                        
                                     </>
                                 )}
                             </div>
@@ -289,7 +394,34 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
             </div>
         </div>
+        <div className='alert'>
+            <div className='alert-content'>
+                {alertSuccess === true ? (<i class="fa-solid fa-circle-check blue"></i>) : ''}
+                {alertSuccess === false ? (<i class="fa-solid fa-circle-xmark red"></i>) : ''}
+                <div className='alert-description'>
+                    {alertSuccess === true ? ( 
+                        <>
+                            <span className='text-bold'>Enviado</span>
+                            <span>El usuario ya existe en nuestra base de datos</span>
+                        </>
+                     ) : ''}
 
+                     {alertSuccess === false ? (
+                        
+                        <>
+                            <span className='text-bold'>Error</span>
+                            <span>El usuario no existe en nuestra base de datos</span>
+                        </>
+                     ): ''}
+                    {/* <span className='text-bold'>Enviado</span>
+                    <span>Usuario verificado en la base de datos</span> */}
+                </div>
+                <div className='alert-close' onClick={closeAlert}>
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+            <div className='alert-progress'></div>
+        </div>
         <div className="trama"></div>
     </>
     )
