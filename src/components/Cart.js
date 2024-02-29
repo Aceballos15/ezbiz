@@ -9,6 +9,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
     const [clients, setClients] = useState([]);
     const [alertSuccess, setAlertSuccess] = useState('');
     const [error, setError] = useState('');
+    const [dataUser, setDataUser] = useState('');
     
 
     const closeCart = () => {
@@ -153,6 +154,9 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         let exist = false;
         let errorMessage = '';
 
+        let load = document.querySelector('.load');
+        
+
         if ( id.length === 0 ) {
             errorMessage = 'Campo vacío, ingresa tu documento';
             console.log("vacio");
@@ -164,53 +168,61 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         }
 
         setAlertSuccess(false);
-
-      fetch(URL_CLIENTS + `?where=Documento.contains(%22${id}%22)`)
-      .then(response => response.json())
-      .then(data => {
-
-        if (errorMessage.length === 0) {
-            
-            if (data.length !== undefined) {
-                data.map(client => {
-                    if (client.Documento === id) {
-                        exist = true;
-                        
-                    }   
-                });
-            }
-             
-
-             if (exist) {
-                setAlertSuccess(true); 
-             }
-  
-             const alert = document.querySelector('.alert');
-             const progress = document.querySelector('.alert-progress');
-     
-             alert.classList.add('active');
-             progress.classList.add('active');
-     
-             setTimeout( () => {
-                 alert.classList.remove('active');  
-                 progress.classList.remove('active');         
-             }, 4000)
-
-             setError('');
+    if (errorMessage.length === 0) {
+        load.classList.add('show');
+        fetch(URL_CLIENTS + `?where=Documento.contains(%22${id}%22)`)
+        .then(response => response.json())
+        .then(data => {
 
             
+                
+                if (data.length !== undefined) {
+                    data.map(client => {
+                        if (client.Documento === id) {
+                            exist = true;
+                            setDataUser(client);
+                        }   
+                    });
+                }
+                
+
+                if (exist) {
+                    setAlertSuccess(true); 
+                    let form_send = document.querySelector('#form-datos-envio');
+                    let form_resumen = document.querySelector('#form-resumen-compra');
+                    
+                    form_send.classList.add('show');
+                    form_resumen.classList.add('hide');
+                }
+    
+                const alert = document.querySelector('.alert');
+                const progress = document.querySelector('.alert-progress');
+        
+                alert.classList.add('active');
+                progress.classList.add('active');
+        
+                setTimeout( () => {
+                    alert.classList.remove('active');  
+                    progress.classList.remove('active');         
+                }, 4000)
+
+                setError('');
+
+                
+        
+
+            load.classList.remove('show');
+        }).catch(error => {
+                setAlertSuccess(false);
+                
+                console.log(error);
+        });
+
+       
         }
 
-
-      }).catch(error => {
-            setAlertSuccess(false);
-            
-            console.log(error);
-      });
-
-      setError(errorMessage);
+        setError(errorMessage);
     }
-
     
     /* const getClientsAPI = async(id) => {
         const clients_api = await fetch(URL_CLIENTS + `?where=Documento.contains(%22${id}%22)`);
@@ -231,6 +243,14 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
         alert.classList.remove('active');
         progress.classList.remove('active'); 
+    }
+
+    const returnFormSummary = () => {
+        let form_send = document.querySelector('#form-datos-envio');
+                    let form_resumen = document.querySelector('#form-resumen-compra');
+
+        form_send.classList.remove('show');
+        form_resumen.classList.remove('hide');
     }
 
     useEffect( () => {
@@ -336,8 +356,8 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                         </table>
                     </div>
                          
-                    <div className="col col-33">
-                        <div className="cart__card">
+                    <div className="col col-33 position-relative">
+                        <div className="cart__card" id='form-resumen-compra'>
                             <div className="cart__header-card">
                                 Resumen de Compra
                             </div>
@@ -379,14 +399,56 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
                                             <div className="cart__cont-next">
                                                 <button type='submit' className="btn btn-blue">Continuar</button>
+                                                <div className='load'> 
+                                                    <div className='loader'></div>
+                                                </div>
                                              </div>
                                         </form>
+
+
                                         
                                     </div>
                                     
                                         
                                     </>
                                 )}
+                            </div>
+                        </div>
+
+                        <div className="cart__card" id='form-datos-envio'>
+                            <div className="cart__header-card">
+                                Datos de envío 
+                                <div class='cart__card-return-form' onClick={returnFormSummary}>
+                                    <i class="fa-solid fa-arrow-left-long"></i>
+                                </div>
+                            </div>
+                            <div className="cart__body-card">
+                                <p>Ingresa o actualiza tu información de contacto y la dirección donde quieres recibir tu envío</p>
+                                
+                                <form>
+                                    <div className='block-form'> 
+                                        <input type='text' className='form-control' placeholder='Nombre' name='nombre' value={dataUser.Nombre} />
+                                        <input type='text' className='form-control' placeholder='Apellido' name='apellido' value={dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido} />
+                                    </div>  
+                                    <input type='text' className='form-control' placeholder='Correo Electrónico' name='nombre' value={dataUser.Correo} />
+                                    <input type='text' className='form-control' placeholder='Teléfono' name='nombre' value={dataUser.Celular} />
+                                    <div className='block-form'>
+                                        <select className='form-control' name='departamento'>
+                                            <option>Departamento</option>
+                                        </select>
+
+                                        <select className='form-control' name='Ciudad'>
+                                            <option>Ciudad</option>
+                                        </select>
+
+                                    </div>
+                                    <input type='text' className='form-control' placeholder='Dirección' name='direccion' value={dataUser.Direccion} />
+
+                                    <div className="cart__cont-next">
+                                    <button type='submit' className="btn btn-blue">Pagar</button>
+                                    </div>
+                                </form>
+                                
                             </div>
                         </div>
                     </div>
@@ -422,6 +484,9 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
             </div>
             <div className='alert-progress'></div>
         </div>
+
+       
+        
         <div className="trama"></div>
     </>
     )
