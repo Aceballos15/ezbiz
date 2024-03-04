@@ -5,12 +5,15 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
     // const [listCart, setListCart] = useState([]);
 
     const URL_CLIENTS = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report";
+    const URL_CITIES = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Municipio1";
 
     const [clients, setClients] = useState([]);
     const [alertSuccess, setAlertSuccess] = useState('');
     const [error, setError] = useState('');
-    const [dataUser, setDataUser] = useState('');
-    
+    const [dataUser, setDataUser] = useState(null);
+    const [enableRegister, setEnableRegister] = useState(false);
+    const [cities, setCities] = useState('');
+    const [departaments, setDepartaments] = useState('');
 
     const closeCart = () => {
         const cart = document.querySelector("#cart");
@@ -193,6 +196,18 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                     
                     form_send.classList.add('show');
                     form_resumen.classList.add('hide');
+
+                    setEnableRegister(false);
+                }else{
+                 
+                    let form_send = document.querySelector('#form-datos-envio');
+                    let form_resumen = document.querySelector('#form-resumen-compra');
+                    
+                    form_send.classList.add('show');
+                    form_resumen.classList.add('hide');
+
+                    setEnableRegister(true);
+                    setDataUser(null);
                 }
     
                 const alert = document.querySelector('.alert');
@@ -253,6 +268,39 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         form_resumen.classList.remove('hide');
     }
 
+    const orders = (e) => {
+
+    }   
+
+    const registerClient = (e) => {
+        e.preventDefault();
+
+        const data = e.target;
+        let tipo_persona = '';
+        
+
+        const newClient = {
+            Documento: 0,
+            Nombre: data.Nombre.value,
+            Primer_Apellido: data.Primer_Apellido.value,
+            //Segundo_Apellido: data.Segundo_Apellido.value,
+            Correo: data.correo.value,
+            Celular: data.telefono.value,
+            Direccion: data.direccion.value,
+            Retenedor: 'No',
+            Fecha_de_Nacimiento: data.fecha_nacimiento.value,
+            Acepta_que_la_factura_sea_enviada_por_medios_electr_nicos: 'Si',
+            Regimen: data.tipo_persona.value,
+            Estado: 'Activo',
+            Cupo: 0,
+            Tipo: 'Detal',
+            Dias: 0,
+
+        }
+        console.log(e.target.nombre);
+
+    }
+
     useEffect( () => {
         getListCart();
 
@@ -269,6 +317,23 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         setTotal(total);
 
 
+        const getDepartaments= async() => {
+            const cities_api = await fetch(URL_CITIES);
+
+            const cities_data = await cities_api.json();
+            //setCities(cities_data);
+
+            let list_cities = [];
+            cities_data.map(city => {
+                list_cities.push(city.Departamento);
+                console.log(city.Departamento);
+            });
+
+            setDepartaments([...new Set(list_cities)]);
+            
+        };
+
+        getDepartaments();
         //getClientsAPI();
     }, []);
 
@@ -425,25 +490,52 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                             <div className="cart__body-card">
                                 <p>Ingresa o actualiza tu información de contacto y la dirección donde quieres recibir tu envío</p>
                                 
-                                <form>
+                                <form onSubmit={dataUser !== null ? orders : registerClient}>
                                     <div className='block-form'> 
-                                        <input type='text' className='form-control' placeholder='Nombre' name='nombre' value={dataUser.Nombre} />
-                                        <input type='text' className='form-control' placeholder='Apellido' name='apellido' value={dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido} />
+                                        <input type='text' className='form-control' placeholder='Nombre' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
+                                        <input type='text' className='form-control' placeholder='Apellido' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
                                     </div>  
-                                    <input type='text' className='form-control' placeholder='Correo Electrónico' name='nombre' value={dataUser.Correo} />
-                                    <input type='text' className='form-control' placeholder='Teléfono' name='nombre' value={dataUser.Celular} />
+                                    <input type='text' className='form-control' placeholder='Correo Electrónico' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
+                                    <input type='text' className='form-control' placeholder='Teléfono' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
+                                
                                     <div className='block-form'>
-                                        <select className='form-control' name='departamento'>
+                                        <select className='form-control' name='departamento' disabled>
                                             <option>Departamento</option>
+                                            { departaments && departaments.length !== 0 && (
+                                                cities.map( departament => {
+                                                    return(
+                                                        <option value={departament}>{departament}</option>
+                                                    )
+                                                } )
+                                            )}
                                         </select>
 
                                         <select className='form-control' name='Ciudad'>
                                             <option>Ciudad</option>
+                                            { cities && cities.length !== 0 && (
+                                                cities.map( city => {
+                                                    return(
+                                                        <option value={city.ID}>{city.Municipio}</option>
+                                                    )
+                                                } )
+                                            )}
+                                            
                                         </select>
 
                                     </div>
-                                    <input type='text' className='form-control' placeholder='Dirección' name='direccion' value={dataUser.Direccion} />
-
+                                    <input type='text' className='form-control' placeholder='Dirección' name='direccion' defaultValue={dataUser !== null ? dataUser.Direccion : ''} />
+                                    { enableRegister && (
+                                        <>
+                                            <input type='date' className='form-control' name='fecha_nacimiento'/>
+                                            
+                                            <select className='form-control' name='tipo_persona'>
+                                                <option selected>Tipo de persona</option>
+                                                <option value='persona natural - regimen simplificado'>Natural</option>
+                                                <option value='persona juridica - regimen comun'>Jurídica</option>
+                                                
+                                            </select>
+                                        </>
+                                    ) }
                                     <div className="cart__cont-next">
                                     <button type='submit' className="btn btn-blue">Pagar</button>
                                     </div>
@@ -459,7 +551,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         <div className='alert'>
             <div className='alert-content'>
                 {alertSuccess === true ? (<i class="fa-solid fa-circle-check blue"></i>) : ''}
-                {alertSuccess === false ? (<i class="fa-solid fa-circle-xmark red"></i>) : ''}
+                {alertSuccess === false ? (<i class="fa-solid fa-triangle-exclamation orange"></i>) : ''}
                 <div className='alert-description'>
                     {alertSuccess === true ? ( 
                         <>
