@@ -13,6 +13,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
     const [dataUser, setDataUser] = useState(null);
     const [enableRegister, setEnableRegister] = useState(false);
     const [cities, setCities] = useState('');
+    const [citiesDep, setCitiesDep] = useState('');
     const [departaments, setDepartaments] = useState('');
 
     const closeCart = () => {
@@ -177,18 +178,20 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         .then(response => response.json())
         .then(data => {
 
-            
+                let client_exists = '';
                 
                 if (data.length !== undefined) {
                     data.map(client => {
                         if (client.Documento === id) {
                             exist = true;
                             setDataUser(client);
+                            client_exists = client;
                         }   
                     });
                 }
-                
 
+                console.log(dataUser);
+                
                 if (exist) {
                     setAlertSuccess(true); 
                     let form_send = document.querySelector('#form-datos-envio');
@@ -198,6 +201,23 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                     form_resumen.classList.add('hide');
 
                     setEnableRegister(false);
+
+                    let list_cities = [];
+                    cities.map( city => {
+
+                        if (client_exists !== null && city.Departamento.includes(client_exists.Departamento1.Departamento)) {
+            
+                            list_cities.push(city);
+            
+                        }
+                    });
+                    
+                   // console.log(dataUser);
+
+                    setCitiesDep(list_cities);
+
+                
+
                 }else{
                  
                     let form_send = document.querySelector('#form-datos-envio');
@@ -227,11 +247,11 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         
 
             load.classList.remove('show');
-        }).catch(error => {
+        });/* .catch(error => {
                 setAlertSuccess(false);
                 
                 console.log(error);
-        });
+        }); */
 
        
         }
@@ -276,29 +296,96 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         e.preventDefault();
 
         const data = e.target;
-        let tipo_persona = '';
-        
+
+        let type_document = document.querySelector('#type_document').value;
+        let document_id = document.querySelector('#document_id').value;
+
+        let city = citiesDep.filter( city => city.Codigo_Municipio === data.ciudad.value);
+        let departament = departaments.filter( departament => departament.id === data.departamento.value);
+
+
+        let city_api = '';
+        city.map( city => {
+            city_api = city.ID.toString();
+        })
+        console.log(city[0].ID);
 
         const newClient = {
-            Documento: 0,
-            Nombre: data.Nombre.value,
-            Primer_Apellido: data.Primer_Apellido.value,
-            //Segundo_Apellido: data.Segundo_Apellido.value,
-            Correo: data.correo.value,
+            Nombre: data.nombre.value,
+            Primer_Apellido: data.apellido.value,
+            Tipo1: type_document,
+            Documento: document_id,
             Celular: data.telefono.value,
-            Direccion: data.direccion.value,
-            Retenedor: 'No',
+            Correo: data.correo.value,
+            Retenedor: "No",
             Fecha_de_Nacimiento: data.fecha_nacimiento.value,
-            Acepta_que_la_factura_sea_enviada_por_medios_electr_nicos: 'Si',
+            //Segundo_Apellido: data.Segundo_Apellido.value,
+            Acepta_que_la_factura_sea_enviada_por_medios_electr_nicos: "Si",
+            Departamento1: city_api,
+            Municipio: city_api,
             Regimen: data.tipo_persona.value,
-            Estado: 'Activo',
+            Estado: "Activo",
             Cupo: 0,
-            Tipo: 'Detal',
+            Tipo: "Detal",
             Dias: 0,
+            location: {
+                country2: "Colombia",
+                address_line_12: data.direccion.value,
+                state_province2: data.departamento.value,
+                district_city2: data.ciudad.value,
+                postal_Code2: "05001"
+    
+            }
+            
+        };
 
-        }
-        console.log(e.target.nombre);
+        console.log(city[0].ID);
 
+        console.log(newClient);
+
+        const config = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(newClient)
+        };
+
+        fetch('https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes', config)
+            .then(response => response.json())
+            .then(data => {
+                console.log('Datos registrados correctamente:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                //return error.text();
+            })/* .then(errorMessage => {
+                console.error('Detalles del error:', errorMessage)
+            }); */
+
+
+      
+
+    }
+
+    const getCities = (e) => {
+
+        let departament = e.target.value; 
+
+        let list_cities = [];
+    
+        cities.map( city => {
+
+            if (city.Codigo_Deapartamento === departament) {
+
+                list_cities.push(city);
+                
+            }
+
+        });
+        setCitiesDep(list_cities);
+
+        
     }
 
     useEffect( () => {
@@ -321,16 +408,27 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
             const cities_api = await fetch(URL_CITIES);
 
             const cities_data = await cities_api.json();
-            //setCities(cities_data);
+            setCities(cities_data);
 
-            let list_cities = [];
+            let list_departaments = [];
+          
             cities_data.map(city => {
-                list_cities.push(city.Departamento);
-                console.log(city.Departamento);
+
+                /* let object = {
+                    id: city.Codigo_Deapartamento,
+                    nombre:city.Departamento
+
+                } */
+
+                list_departaments.push({id:city.Codigo_Deapartamento, nombre:city.Departamento});
+                //list_cities.push(city.Departamento);
+                
             });
 
-            setDepartaments([...new Set(list_cities)]);
-            
+            let list = new Set(list_departaments.map(item => JSON.stringify(item)));
+            let new_list_departaments = Array.from(list).map(item => JSON.parse(item));
+
+            setDepartaments(new_list_departaments);
         };
 
         getDepartaments();
@@ -449,14 +547,16 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                                         <form onSubmit={verifyUser}>
                                             <div className='form__data-cart'>
 
-                                                <select className="form-control" name='type_document'>
-                                                    <option value="">Tipo</option>
-                                                    <option value="">C.C</option>
-                                                    <option value="">T.I</option>
+                                                <select className="form-control" name='type_document' id='type_document'>
+                                                    <option>Tipo</option>
+                                                    <option value="cc">CC</option>
+                                                    <option value="nit">NIT</option>
+                                                    <option value="ce">CE</option>
+                                                    <option value="pasaporte">PPT</option>
                                                 </select>
 
                                                 <div className='text-center'>
-                                                    <input type="text" className="form-control" name='id' placeholder="Número de documento" max='11'/>
+                                                    <input type="text" className="form-control" name='document' id='document_id' placeholder="Número de documento" max='11'/>
                                                     <span className="text-error">{error}</span>
                                                 </div>
                                                 
@@ -499,23 +599,23 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                                     <input type='text' className='form-control' placeholder='Teléfono' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
                                 
                                     <div className='block-form'>
-                                        <select className='form-control' name='departamento' disabled>
+                                        <select className='form-control' name='departamento' onChange={getCities}>
                                             <option>Departamento</option>
                                             { departaments && departaments.length !== 0 && (
-                                                cities.map( departament => {
+                                                departaments.map( departament => {
                                                     return(
-                                                        <option value={departament}>{departament}</option>
+                                                        <option value={departament.id} selected={dataUser !== null && dataUser.Departamento1.Departamento === departament.nombre ? 'selected' : '' }>{departament.nombre}</option>
                                                     )
                                                 } )
                                             )}
                                         </select>
 
-                                        <select className='form-control' name='Ciudad'>
+                                        <select className='form-control' name='ciudad'>
                                             <option>Ciudad</option>
-                                            { cities && cities.length !== 0 && (
-                                                cities.map( city => {
+                                            { citiesDep && citiesDep.length !== 0 && (
+                                                citiesDep.map( city => {
                                                     return(
-                                                        <option value={city.ID}>{city.Municipio}</option>
+                                                        <option value={city.Codigo_Municipio} selected={dataUser !== null && dataUser.Municipio.Municipio === city.Municipio ? 'selected' : '' }  >{city.Municipio}</option>
                                                     )
                                                 } )
                                             )}
