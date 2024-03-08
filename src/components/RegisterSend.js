@@ -142,6 +142,8 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
 
         let city_api = '';
 
+        verifyInputs(data);
+
         let city = citiesDep.filter( city => {
 
             city_api = city.ID;
@@ -155,7 +157,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         city.map( city => {
             city_api = city.ID.toString();
         })
-        console.log(city[0].ID);
+        console.log(city);
 
         const newClient = {
             Nombre: data.nombre.value,
@@ -247,8 +249,80 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         form_resumen.classList.remove('hide');
     }
 
-    const verifyInputs = (inputs) => {
+    const verifyInputs = (input
+        ) => {
+        
+        let name = input.nombre.value; 
+        let last_name = input.apellido.value;
+        let email = input.correo.value;
+        let phone = input.telefono.value;
+        let departament = input.departamento.value;
+        let city = input.city.value;
+        let address = input.direccion.value;
+        let date_birth = input.fecha_nacimiento.value;
+        let type_person = input.tipo_persona.value;
 
+        let errors = {};
+
+        
+
+        if ( name.length !== 0 ) {
+            errors.name = "El campo está vacío";
+        }else if(!verifyContentNumbers(name)) {
+            errors.name = "El campo no puede contener numeros";
+        }
+
+        if ( last_name.length !== 0 ) {
+            errors.last_name = "El campo está vacío";
+        }else if(!verifyContentNumbers(last_name)) {
+            errors.last_name = "El campo no puede contener numeros";
+        }
+
+        if (email.length !== 0) {
+            errors.correo = "El campo está vacío";
+        }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.text(email)) {
+            errors.correo = "Correo eletrónico no valido";
+        }
+
+        if ( phone.length !== 0 ) {
+            errors.phone = "El campo está vacío";
+        }else if(verifyContentNumbers(phone)) {
+            errors.phone = "El campo no puede contener letras";
+        }
+
+        if (departament.length !== 0) {
+            errors.departament = "El campo está vacío";
+        }
+
+        if (city.length !== 0) {
+            errors.city = "El campo está vacío";
+        }
+
+        if (address.length !== 0) {
+            errors.city = "El campo está vacío";
+        }
+        
+        if (date_birth.length !== 0) {
+            errors.date_birth = "El campo está vacío";
+        }
+
+        if (type_person.length !== 0) {
+            errors.date_birth = "El campo está vacío";
+        }
+
+        setErrors(errors);
+ 
+        /* if (type === 'address') {
+            
+        }else{
+
+        } */
+
+    }
+
+    const verifyContentNumbers = (text) => {
+
+        return /^[a-zA-Z\s]+$/.test(text);
     }
 
 
@@ -358,8 +432,12 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                 
                 <form onSubmit={dataUser !== null ? orders : registerClient}>
                     <div className='block-form'> 
-                        <input type='text' className='form-control' placeholder='Nombre' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
-                        <input type='text' className='form-control' placeholder='Apellido' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
+                        <div>
+                            <input type='text' className='form-control' placeholder='Nombre' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
+                        </div>
+                        <div>
+                            <input type='text' className='form-control' placeholder='Apellido' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
+                        </div>
                     </div>  
                     <input type='text' className='form-control' placeholder='Correo Electrónico' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
                     <input type='text' className='form-control' placeholder='Teléfono' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
