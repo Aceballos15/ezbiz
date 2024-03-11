@@ -14,7 +14,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
     const [cities, setCities] = useState('');
     const [citiesDep, setCitiesDep] = useState('');
     const [departaments, setDepartaments] = useState('');
-    const [Errors, setErrors] = useState([]);
+    const [errors, setErrors] = useState([]);
 
     const verifyUser = (e) => {
        
@@ -142,7 +142,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
 
         let city_api = '';
 
-        verifyInputs(data);
+        let verify = verifyInputs(data);
 
         let city = citiesDep.filter( city => {
 
@@ -159,61 +159,65 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         })
         console.log(city);
 
-        const newClient = {
-            Nombre: data.nombre.value,
-            Primer_Apellido: data.apellido.value,
-            Tipo1: type_document,
-            Documento: document_id,
-            Celular: data.telefono.value,
-            Correo: data.correo.value,
-            Retenedor: "No",
-            Fecha_de_Nacimiento: data.fecha_nacimiento.value,
-            //Segundo_Apellido: data.Segundo_Apellido.value,
-            Acepta_que_la_factura_sea_enviada_por_medios_electr_nicos: "Si",
-            Departamento1: city_api,
-            Municipio: city_api,
-            Regimen: data.tipo_persona.value,
-            Estado: "Activo",
-            Cupo: 0,
-            Tipo: "Detal",
-            Dias: 0,
-            location: {
-                country2: "Colombia ",
-                address_line_12: data.direccion.value,
-                state_province2: city[0].Departamento,
-                district_city2: city[0].Municipio,
-                postal_Code2: "05001"
+        if (verify) {
+            const newClient = {
+                Nombre: data.nombre.value,
+                Primer_Apellido: data.apellido.value,
+                Tipo1: type_document,
+                Documento: document_id,
+                Celular: data.telefono.value,
+                Correo: data.correo.value,
+                Retenedor: "No",
+                Fecha_de_Nacimiento: data.fecha_nacimiento.value,
+                //Segundo_Apellido: data.Segundo_Apellido.value,
+                Acepta_que_la_factura_sea_enviada_por_medios_electr_nicos: "Si",
+                Departamento1: city_api,
+                Municipio: city_api,
+                Regimen: data.tipo_persona.value,
+                Estado: "Activo",
+                Cupo: 0,
+                Tipo: "Detal",
+                Dias: 0,
+                location: {
+                    country2: "Colombia ",
+                    address_line_12: data.direccion.value,
+                    state_province2: city[0].Departamento,
+                    district_city2: city[0].Municipio,
+                    postal_Code2: "05001"
+        
+                }
+                
+            };
+            console.log(data.ciudad.value);
+            console.log(data.departamento.value);
     
-            }
-            
-        };
+            console.log(city[0].ID);
+    
+            console.log(newClient);
+    
+            const config = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(newClient)
+            };
+    
+            fetch('https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes', config)
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Datos registrados correctamente:', data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    //return error.text();
+                })/* .then(errorMessage => {
+                    console.error('Detalles del error:', errorMessage)
+                }); */
 
-        console.log(data.ciudad.value);
-        console.log(data.departamento.value);
-
-        console.log(city[0].ID);
-
-        console.log(newClient);
-
-        const config = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(newClient)
-        };
-
-        fetch('https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes', config)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Datos registrados correctamente:', data);
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                //return error.text();
-            })/* .then(errorMessage => {
-                console.error('Detalles del error:', errorMessage)
-            }); */
+        }
+        
+        
 
 
       
@@ -257,7 +261,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         let email = input.correo.value;
         let phone = input.telefono.value;
         let departament = input.departamento.value;
-        let city = input.city.value;
+        let city = input.ciudad.value;
         let address = input.direccion.value;
         let date_birth = input.fecha_nacimiento.value;
         let type_person = input.tipo_persona.value;
@@ -266,51 +270,57 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
 
         
 
-        if ( name.length !== 0 ) {
+        if ( name.length === 0 ) {
             errors.name = "El campo está vacío";
         }else if(!verifyContentNumbers(name)) {
             errors.name = "El campo no puede contener numeros";
         }
 
-        if ( last_name.length !== 0 ) {
+        if ( last_name.length === 0 ) {
             errors.last_name = "El campo está vacío";
         }else if(!verifyContentNumbers(last_name)) {
             errors.last_name = "El campo no puede contener numeros";
         }
 
-        if (email.length !== 0) {
-            errors.correo = "El campo está vacío";
-        }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.text(email)) {
-            errors.correo = "Correo eletrónico no valido";
+        if (email.length === 0) {
+            errors.email = "El campo está vacío";
+        }else if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            errors.email = "Correo eletrónico no valido";
         }
 
-        if ( phone.length !== 0 ) {
+        if ( phone.length === 0 ) {
             errors.phone = "El campo está vacío";
         }else if(verifyContentNumbers(phone)) {
             errors.phone = "El campo no puede contener letras";
         }
 
-        if (departament.length !== 0) {
+        if (departament.length === 0) {
             errors.departament = "El campo está vacío";
         }
 
-        if (city.length !== 0) {
+        if (city.length === 0) {
             errors.city = "El campo está vacío";
         }
 
-        if (address.length !== 0) {
+        if (address.length === 0) {
             errors.city = "El campo está vacío";
         }
         
-        if (date_birth.length !== 0) {
+        if (date_birth.length === 0) {
             errors.date_birth = "El campo está vacío";
         }
 
-        if (type_person.length !== 0) {
+        if (type_person.length === 0) {
             errors.date_birth = "El campo está vacío";
         }
 
         setErrors(errors);
+
+        if (errors) {
+            return false
+        }
+
+        return true;
  
         /* if (type === 'address') {
             
@@ -434,50 +444,80 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                     <div className='block-form'> 
                         <div>
                             <input type='text' className='form-control' placeholder='Nombre' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
+                            { errors && errors.name ? ( <span className='text-error'> { errors.name } </span> ) : ''}
                         </div>
                         <div>
                             <input type='text' className='form-control' placeholder='Apellido' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
+                            { errors && errors.last_name ? ( <span className='text-error'> { errors.last_name } </span> ) : ''}
                         </div>
                     </div>  
-                    <input type='text' className='form-control' placeholder='Correo Electrónico' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
-                    <input type='text' className='form-control' placeholder='Teléfono' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
-                
-                    <div className='block-form'>
-                        <select className='form-control' name='departamento' onChange={getCities}>
-                            <option>Departamento</option>
-                            { departaments && departaments.length !== 0 && (
-                                departaments.map( departament => {
-                                    return(
-                                        <option value={departament.id} selected={dataUser !== null && dataUser.Departamento1.Departamento === departament.nombre ? 'selected' : '' }>{departament.nombre}</option>
-                                    )
-                                } )
-                            )}
-                        </select>
-
-                        <select className='form-control' name='ciudad'>
-                            <option>Ciudad</option>
-                            { citiesDep && citiesDep.length !== 0 && (
-                                citiesDep.map( city => {
-                                    return(
-                                        <option value={city.Codigo_Municipio} selected={dataUser !== null && dataUser.Municipio.Municipio === city.Municipio ? 'selected' : '' }  >{city.Municipio}</option>
-                                    )
-                                } )
-                            )}
-                            
-                        </select>
+                    <div>
+                        <input type='text' className='form-control' placeholder='Correo Electrónico' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
+                        { errors && errors.email ? ( <span className='text-error'> { errors.email } </span> ) : ''}
 
                     </div>
-                    <input type='text' className='form-control' placeholder='Dirección' name='direccion' defaultValue={dataUser !== null ? dataUser.Direccion : ''} />
+                    <div>
+                        <input type='text' className='form-control' placeholder='Teléfono' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
+                        { errors && errors.phone ? ( <span className='text-error'> { errors.phone } </span> ) : ''}
+
+                    </div>
+                
+                    <div className='block-form'>
+                        <div>
+
+                            <select className='form-control' name='departamento' onChange={getCities}>
+                                <option>Departamento</option>
+                                { departaments && departaments.length !== 0 && (
+                                    departaments.map( departament => {
+                                        return(
+                                            <option value={departament.id} selected={dataUser !== null && dataUser.Departamento1.Departamento === departament.nombre ? 'selected' : '' }>{departament.nombre}</option>
+                                        )
+                                    } )
+                                )}
+                            </select>
+                            { errors && errors.departament ? ( <span className='text-error'> { errors.departament } </span> ) : ''}
+
+                        </div>
+                        
+                        <div>
+                            <select className='form-control' name='ciudad'>
+                                <option>Ciudad</option>
+                                { citiesDep && citiesDep.length !== 0 && (
+                                    citiesDep.map( city => {
+                                        return(
+                                            <option value={city.Codigo_Municipio} selected={dataUser !== null && dataUser.Municipio.Municipio === city.Municipio ? 'selected' : '' }  >{city.Municipio}</option>
+                                        )
+                                    } )
+                                )}
+                                
+                            </select>
+                            { errors && errors.city ? ( <span className='text-error'> { errors.city } </span> ) : ''}
+
+                        </div>
+
+                    </div>
+                    <div>
+                        <input type='text' className='form-control' placeholder='Dirección' name='direccion' defaultValue={dataUser !== null ? dataUser.Direccion : ''} />
+                        { errors && errors.city ? ( <span className='text-error'> { errors.city } </span> ) : ''}
+
+                    </div>
+
                     { enableRegister && (
                         <>
+                        <div>
                             <input type='date' className='form-control' name='fecha_nacimiento'/>
-                            
+                            { errors && errors.date_birth ? ( <span className='text-error'> { errors.date_birth } </span> ) : ''}
+
+                        </div>
+                        <div>
                             <select className='form-control' name='tipo_persona'>
                                 <option selected>Tipo de persona</option>
                                 <option value='persona natural - regimen simplificado'>Natural</option>
                                 <option value='persona juridica - regimen comun'>Jurídica</option>
                                 
                             </select>
+                            { errors && errors.type_person ? ( <span className='text-error'> { errors.type_person } </span> ) : ''}
+                        </div>  
                         </>
                     ) }
                     <div className="cart__cont-next">
