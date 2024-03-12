@@ -303,7 +303,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         }
 
         if (address.length === 0) {
-            errors.city = "El campo está vacío";
+            errors.address = "El campo está vacío";
         }
         
         if (date_birth.length === 0) {
@@ -311,7 +311,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         }
 
         if (type_person.length === 0) {
-            errors.date_birth = "El campo está vacío";
+            errors.type_person = "El campo está vacío";
         }
 
         setErrors(errors);
@@ -466,7 +466,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         <div>
 
                             <select className='form-control' name='departamento' onChange={getCities}>
-                                <option>Departamento</option>
+                                <option value=''>Departamento</option>
                                 { departaments && departaments.length !== 0 && (
                                     departaments.map( departament => {
                                         return(
@@ -481,7 +481,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         
                         <div>
                             <select className='form-control' name='ciudad'>
-                                <option>Ciudad</option>
+                                <option value=''>Ciudad</option>
                                 { citiesDep && citiesDep.length !== 0 && (
                                     citiesDep.map( city => {
                                         return(
@@ -498,7 +498,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                     </div>
                     <div>
                         <input type='text' className='form-control' placeholder='Dirección' name='direccion' defaultValue={dataUser !== null ? dataUser.Direccion : ''} />
-                        { errors && errors.city ? ( <span className='text-error'> { errors.city } </span> ) : ''}
+                        { errors && errors.address ? ( <span className='text-error'> { errors.address } </span> ) : ''}
 
                     </div>
 
@@ -511,7 +511,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         </div>
                         <div>
                             <select className='form-control' name='tipo_persona'>
-                                <option selected>Tipo de persona</option>
+                                <option selected value=''>Tipo de persona</option>
                                 <option value='persona natural - regimen simplificado'>Natural</option>
                                 <option value='persona juridica - regimen comun'>Jurídica</option>
                                 
