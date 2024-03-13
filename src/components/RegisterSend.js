@@ -418,6 +418,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                                     <div className='loader'></div>
                                 </div>
                                 </div>
+                                
                         </form>
 
 
