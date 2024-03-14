@@ -166,13 +166,13 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
 
 
 
-            order_json = {
+           /*  order_json = {
                 Fecha: new Date(),
                 Clientes: id_cliente,
                 Referencia: `1hr-${number}-${response.fecha}-${response.ID}`
-            }
+            } */
 
-            const config_json_order = {
+            /* const config_json_order = {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
@@ -183,7 +183,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
             const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Pedidos_Verizon';
             const order_data = await fetch(URL_SIGNATURE, config_json);
             const order = await order_data.json();
-
+ */
 
     
         }
