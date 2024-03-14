@@ -15,6 +15,8 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
     const [citiesDep, setCitiesDep] = useState('');
     const [departaments, setDepartaments] = useState('');
     const [errors, setErrors] = useState([]);
+    const [formWompi, setFormWompi] = useState([]);
+
 
     const verifyUser = (e) => {
        
@@ -128,8 +130,66 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
     }
     
 
-    const orders = (e) => {
+    const orders = async(e) => {
 
+        e.preventDefault();
+
+        const data = e.target;  
+
+        let type_document = document.querySelector('#type_document').value;
+        let document_id = document.querySelector('#document_id').value;
+
+        let verify = verifyInputs(data);
+
+        if (verify) {
+            console.log("Sin errores");
+
+            const data_json = {
+                fecha: new Date(),
+                ID: parseInt(document_id),
+                amount: total
+            }
+    
+            const config_json = {
+                method: 'POST',
+                
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_json)
+            };
+    
+            const URL_SIGNATURE = 'https://ad6e-190-0-247-116.ngrok-free.app/signature/1hora';
+            const ngrok_API = await fetch(URL_SIGNATURE, config_json);
+            const data_api = await ngrok_API.json();
+            setFormWompi([data_api]);
+
+
+
+            order_json = {
+                Fecha: new Date(),
+                Clientes: id_cliente,
+                Referencia: `1hr-${number}-${response.fecha}-${response.ID}`
+            }
+
+            const config_json_order = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_json)
+            };
+
+            const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Pedidos_Verizon';
+            const order_data = await fetch(URL_SIGNATURE, config_json);
+            const order = await order_data.json();
+
+
+    
+        }
+
+
+       
     }  
 
     const registerClient = (e) => {
@@ -253,8 +313,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         form_resumen.classList.remove('hide');
     }
 
-    const verifyInputs = (input
-        ) => {
+    const verifyInputs = (input) => {
         
         let name = input.nombre.value; 
         let last_name = input.apellido.value;
@@ -263,12 +322,11 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         let departament = input.departamento.value;
         let city = input.ciudad.value;
         let address = input.direccion.value;
-        let date_birth = input.fecha_nacimiento.value;
-        let type_person = input.tipo_persona.value;
+        let date_birth = input.fecha_nacimiento ? input.fecha_nacimiento.value : null;
+        let type_person = input.tipo_persona ? input.tipo_persona.value : null;
 
         let errors = {};
-
-        
+ 
 
         if ( name.length === 0 ) {
             errors.name = "El campo está vacío";
@@ -305,19 +363,22 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         if (address.length === 0) {
             errors.address = "El campo está vacío";
         }
-        
-        if (date_birth.length === 0) {
+
+        if (date_birth !== null && date_birth.length === 0) {
             errors.date_birth = "El campo está vacío";
+         
         }
 
-        if (type_person.length === 0) {
+        if (type_person !== null && type_person.length === 0) {
             errors.type_person = "El campo está vacío";
         }
 
+    
+
         setErrors(errors);
 
-        if (errors) {
-            return false
+        if (Object.keys(errors).length !== 0) {
+            return false;
         }
 
         return true;
@@ -335,6 +396,14 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         return /^[a-zA-Z\s]+$/.test(text);
     }
 
+    useEffect( () => {
+        
+
+        if (formWompi && formWompi.length !== 0) {
+            document.getElementById("formWompi").submit();
+        }
+
+    }, [formWompi]);
 
     useEffect( () => {
         const getDepartaments= async() => {
@@ -367,6 +436,8 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         getDepartaments();
         //getClientsAPI();
     }, []);
+
+    
 
   return (
     <>
@@ -444,21 +515,21 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                 <form onSubmit={dataUser !== null ? orders : registerClient}>
                     <div className='block-form'> 
                         <div>
-                            <input type='text' className='form-control' placeholder='Nombre' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
+                            <input type='text' className='form-control' placeholder='Nombre *' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
                             { errors && errors.name ? ( <span className='text-error'> { errors.name } </span> ) : ''}
                         </div>
                         <div>
-                            <input type='text' className='form-control' placeholder='Apellido' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
+                            <input type='text' className='form-control' placeholder='Apellido *' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
                             { errors && errors.last_name ? ( <span className='text-error'> { errors.last_name } </span> ) : ''}
                         </div>
                     </div>  
                     <div>
-                        <input type='text' className='form-control' placeholder='Correo Electrónico' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
+                        <input type='text' className='form-control' placeholder='Correo Electrónico *' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
                         { errors && errors.email ? ( <span className='text-error'> { errors.email } </span> ) : ''}
 
                     </div>
                     <div>
-                        <input type='text' className='form-control' placeholder='Teléfono' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
+                        <input type='text' className='form-control' placeholder='Teléfono *' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
                         { errors && errors.phone ? ( <span className='text-error'> { errors.phone } </span> ) : ''}
 
                     </div>
@@ -467,7 +538,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         <div>
 
                             <select className='form-control' name='departamento' onChange={getCities}>
-                                <option value=''>Departamento</option>
+                                <option value=''>Departamento *</option>
                                 { departaments && departaments.length !== 0 && (
                                     departaments.map( departament => {
                                         return(
@@ -482,7 +553,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         
                         <div>
                             <select className='form-control' name='ciudad'>
-                                <option value=''>Ciudad</option>
+                                <option value=''>Ciudad *</option>
                                 { citiesDep && citiesDep.length !== 0 && (
                                     citiesDep.map( city => {
                                         return(
@@ -498,7 +569,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
 
                     </div>
                     <div>
-                        <input type='text' className='form-control' placeholder='Dirección' name='direccion' defaultValue={dataUser !== null ? dataUser.Direccion : ''} />
+                        <input type='text' className='form-control' placeholder='Dirección *' name='direccion' defaultValue={dataUser !== null ? dataUser.Direccion : ''} />
                         { errors && errors.address ? ( <span className='text-error'> { errors.address } </span> ) : ''}
 
                     </div>
@@ -512,7 +583,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         </div>
                         <div>
                             <select className='form-control' name='tipo_persona'>
-                                <option selected value=''>Tipo de persona</option>
+                                <option selected value=''>Tipo de persona *</option>
                                 <option value='persona natural - regimen simplificado'>Natural</option>
                                 <option value='persona juridica - regimen comun'>Jurídica</option>
                                 
@@ -528,6 +599,23 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                 
             </div>
         </div>
+
+        {formWompi && formWompi.length !== 0 && (
+            formWompi.map( item => {
+                return (
+                    <>
+                         <form id="formWompi" action="https://checkout.wompi.co/p/" method="GET"> 
+                            <input type="hidden" name="public-key" class="key" defaultValue={item.publicKey} />  
+                            <input type="hidden" name="currency" class="currency" defaultValue={item.currency} />
+                            <input type="hidden" name="amount-in-cents" class="amount" defaultValue={item.amount} />
+                            <input type="hidden" name="reference" class="reference" defaultValue={item.reference} /> 
+                            <input type="hidden" name="signature:integrity" class="signature" defaultValue={item.signature}/>
+                
+                        </form>
+                    </>
+                )
+            })
+        )}
     </>
   )
 }
