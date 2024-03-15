@@ -99,10 +99,10 @@ img {
 
 .btn-blue {
     background-color: var(--blue);
-    padding: 0.5rem 1rem;
+    padding: 1rem 1rem;
     font-weight: bold;
     color: var(--white);
-    margin: 1rem 0;
+   
 }
 
 .btn-blue:hover {
@@ -780,6 +780,11 @@ img {
     padding: 0;
     display: inline !important;
     width: 20% !important;
+}
+
+.cart .btn-blue {
+    padding: 0.5rem 1rem;
+    margin: 1rem 0;
 }
 
 /* ============ FOOTER ========= */
