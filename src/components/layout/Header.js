@@ -70,29 +70,40 @@ useEffect( () => {
 
 return (
         <>
-            <header className="header">
-                <div className="header__container container">
-                    <div className="header__logo">
-                        <a href="/">
-                            <img src="./img/Logo_1Hora 1.png" alt="" />
-                        </a>
+            <header className='header-ppal'>
+                <div className="header">
+                    <div className="header__container container">
+                        <div className="header__logo">
+                            <a href="/">
+                                <img src="./img/Logo_1Hora 1.png" alt="" />
+                            </a>
+                        </div>
+                        <nav className="header__nav">
+                            <input type="text" placeholder="Filtrar por producto" id="search-product" onChange={(e) => searchProducts(e)} />
+                            <button className="btn btn-search">
+                                <img src="./img/search.png" alt="" />
+                            </button>
+                        </nav>
+                        <div className="header__cart" onClick={openCart}>
+                            <div className="btn btn-cart" id="btn-cart">
+                                <img src="./img/cart.png" alt="" />
+                            </div>
+                            <div className="header__text-cart">
+                                <span>Tu carrito</span>
+                                <span className="header__price-cart">{formatNumber(total, true)} COP</span>
+                            </div>
+                        </div>
+                        
                     </div>
+
+                </div>
+                <div className='header-mb'>
                     <nav className="header__nav">
                         <input type="text" placeholder="Filtrar por producto" id="search-product" onChange={(e) => searchProducts(e)} />
                         <button className="btn btn-search">
                             <img src="./img/search.png" alt="" />
                         </button>
                     </nav>
-                    <div className="header__cart" onClick={openCart}>
-                        <div className="btn btn-cart" id="btn-cart">
-                            <img src="./img/cart.png" alt="" />
-                        </div>
-                        <div className="header__text-cart">
-                            <span>Tu carrito</span>
-                            <span className="header__price-cart">{formatNumber(total, true)} COP</span>
-                        </div>
-                    </div>
-                    
                 </div>
             
             </header>

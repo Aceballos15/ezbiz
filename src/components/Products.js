@@ -39,7 +39,7 @@ export const Products = ({groupProducts}) => {
         <section className="products section">
             <div className="container">
                 <div className="row">
-                    <div className="col col-25">
+                    <div className="col col-25 col-mb-100">
                          <div className="products__category">
                             <h3 className="title">Categoría</h3>
                             <div className="products__cont-categories">
@@ -58,7 +58,7 @@ export const Products = ({groupProducts}) => {
                           </div>
                         </div>
                     </div>
-                    <div className="col col-75">
+                    <div className="col col-75 col-mb-100">
                         <div className="row">
                             
                             <Outlet />

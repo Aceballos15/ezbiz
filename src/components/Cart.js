@@ -208,7 +208,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                 </div>
 
                 <div className="row">
-                    <div className="col col-66">
+                    <div className="col col-66 col-mb-100">
                         <table className="table cart__table">
                             <thead>
                                 <tr>
@@ -271,7 +271,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                         </table>
                     </div>
                     
-                    <div className="col col-33 position-relative">
+                    <div className="col col-33 col-mb-100 position-relative">
                         <RegisterSend total={total} subtotal={subtotal} productsCart={productsCart} setAlertSuccess={setAlertSuccess}/>
                     </div>
                 </div>

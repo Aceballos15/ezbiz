@@ -58,7 +58,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
         {products && products.length !== 0 && (
             products.map( product => {
                 return(
-                    <div className="col col-33" key={product.id} id={product.ID}>
+                    <div className="col col-33 col-mb-50" key={product.id} id={product.ID}>
                         <article className="products__card-product">
                             <div className="products__card-img">
                                 <img src={product.Imagen_publica.url} alt=""/>

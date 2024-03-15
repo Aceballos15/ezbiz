@@ -16,7 +16,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
     const [departaments, setDepartaments] = useState('');
     const [errors, setErrors] = useState([]);
     const [formWompi, setFormWompi] = useState([]);
-
+    const [idCliente, setIdCliente] = useState('');
 
     const verifyUser = (e) => {
        
@@ -56,6 +56,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                             exist = true;
                             setDataUser(client);
                             client_exists = client;
+                            setIdCliente(client.ID);
                         }   
                     });
                 }
@@ -159,35 +160,12 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://ad6e-190-0-247-116.ngrok-free.app/signature/1hora';
+            const URL_SIGNATURE = 'https://34c5-190-0-247-116.ngrok-free.app/signature/1hora';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
 
-
-
-           /*  order_json = {
-                Fecha: new Date(),
-                Clientes: id_cliente,
-                Referencia: `1hr-${number}-${response.fecha}-${response.ID}`
-            } */
-
-            /* const config_json_order = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(data_json)
-            };
-
-            const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Pedidos_Verizon';
-            const order_data = await fetch(URL_SIGNATURE, config_json);
-            const order = await order_data.json();
- */
-
-    
         }
-
 
        
     }  
@@ -396,6 +374,16 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         return /^[a-zA-Z\s]+$/.test(text);
     }
 
+    const dateNow = () => {
+        const fechaActual = new Date();
+        const dia = fechaActual.getDate();
+        const mes = fechaActual.getMonth() + 1; // Se suma 1 porque los meses van de 0 a 11
+        const año = fechaActual.getFullYear();
+        const fechaFormateada = `${año}-${mes}-${dia}`;
+
+        return fechaFormateada;
+    }
+
     useEffect( () => {
         
 
@@ -434,6 +422,8 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
         };
 
         getDepartaments();
+
+        console.log(productsCart);
         //getClientsAPI();
     }, []);
 
@@ -602,6 +592,50 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
 
         {formWompi && formWompi.length !== 0 && (
             formWompi.map( item => {
+
+                let products = [];
+                           
+                productsCart.map(product => {
+                    let object = {
+                            
+                        Productos: product.ID,
+                        Precio: product.precio,
+                        Cantidad: product.quantity,
+                        Iva_product: 0
+                    };
+
+                    products.push(object);
+                });           
+                
+                const order_json = {
+                    Fecha: dateNow(),
+                    Clientes: idCliente,
+                    referenciaCargador: item.reference,
+                    totalCompra: total,
+                    Subtotal: subtotal,
+                    Iva_Total: 0,
+                    Estado: "Pending",
+                    Items: products
+                } 
+
+                console.log(order_json);
+
+                const config_json_order = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(order_json)
+                };
+    
+                const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Pedidos_Verizon';
+                  
+                fetch(URl_ORDERS, config_json_order)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                });
+                
                 return (
                     <>
                          <form id="formWompi" action="https://checkout.wompi.co/p/" method="GET"> 
