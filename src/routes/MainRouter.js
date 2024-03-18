@@ -13,6 +13,7 @@ export const MainRouter = () => {
     const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
     const [productsCart, setProductsCart] = useState(false);
+    const [iva, setIva] = useState("");
     const [subtotal, setSubtotal] = useState("");
     const [total, setTotal] = useState("");
 
@@ -57,7 +58,7 @@ export const MainRouter = () => {
           <main>
               <Routes>
                   <Route path='/' element={<Products  groupProducts={groupProducts} />} >
-                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} />}/>
+                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} />}/>
                         { groupProducts && groupProducts.length !== 0 && (
                             groupProducts.map( group => {
                                 let new_products = [];
@@ -70,7 +71,7 @@ export const MainRouter = () => {
 
                                 return (
                                     <>
-                                        <Route path={group} element={<ProductsCategory category={group} setProductsCar={setProductsCart} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts}/>} />
+                                        <Route path={group} element={<ProductsCategory category={group} setProductsCar={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts}/>} />
                                     </>
                                 )
                             } )
@@ -80,7 +81,7 @@ export const MainRouter = () => {
           </main>
   
           <Footer />
-          <Cart productsCart={productsCart} setProductsCart={setProductsCart} subtotal={subtotal} setSubtotal={setSubtotal} total={total} setTotal={setTotal} />
+          <Cart productsCart={productsCart} setProductsCart={setProductsCart} iva={iva} setIva={setIva} subtotal={subtotal} setSubtotal={setSubtotal} total={total} setTotal={setTotal} />
   
       </BrowserRouter>
   

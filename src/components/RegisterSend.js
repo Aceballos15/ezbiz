@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
 
-export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) => {
+export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSuccess}) => {
 
     const URL_CLIENTS = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report";
     const URL_CITIES = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Municipio1";
@@ -148,7 +148,8 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
             const data_json = {
                 fecha: new Date(),
                 ID: parseInt(document_id),
-                amount: total
+                amount: total,
+                Hora1: "Si"
             }
     
             const config_json = {
@@ -160,7 +161,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://82e3-2800-e2-bd80-12ec-b067-71c7-91a9-f94a.ngrok-free.app/signature/1hora';
+            const URL_SIGNATURE = 'https://dbe0-190-0-247-116.ngrok-free.app/signature/1hora';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
@@ -437,6 +438,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
             </div>
             <div className="cart__body-card">
                 <div className="cart__cont-total">
+                <p>IVA: <span className="text-bold"> {formatNumber(iva, true)} </span></p> 
                     <p>Subtotal: <span className="text-bold"> {formatNumber(subtotal, true)} </span></p> 
                     {/* <p>Costo de envío: <span className="text-bold"> $20.000 </span></p> */}
                     <p className="cart__total">Total:  <span>{formatNumber(total, true)} </span></p>
@@ -601,7 +603,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                         Productos: product.ID,
                         Precio: product.precio,
                         Cantidad: product.quantity,
-                        Iva_product: 0
+                        Iva_product: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100)
                     };
 
                     products.push(object);
@@ -613,7 +615,7 @@ export const RegisterSend = ({total, subtotal, productsCart, setAlertSuccess}) =
                     referenciaCargador: item.reference,
                     totalCompra: total,
                     Subtotal: subtotal,
-                    Iva_Total: 0,
+                    Iva_Total: iva,
                     Estado: "Pending",
                     Items: products
                 } 

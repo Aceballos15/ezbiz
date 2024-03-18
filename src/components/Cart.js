@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
 import { RegisterSend } from './RegisterSend';
 
-export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, total, setTotal}) => {
+export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setSubtotal, total, setTotal}) => {
     // const [listCart, setListCart] = useState([]);
 
     
@@ -37,17 +37,22 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         let new_products_cart = productsCart.filter( (product) => product.ID !== id );
         let total = 0;
         let subtotal = 0;
-        
+        let iva = 0;
+
         setProductsCart(new_products_cart);
         localStorage.setItem('product', JSON.stringify(new_products_cart));
 
         new_products_cart.map(product => {
+            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
-            subtotal += product.precio;
+            iva += iva_decimal * product.precio;
         });
 
         setTotal(total);
         setSubtotal(subtotal);
+        setIva(iva);
            
     }
 
@@ -60,7 +65,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
         console.log(list_products); */
         let subtotal = 0;
         let total = 0;
-
+        let iva = 0;
     
        let new_products_cart = productsCart.filter( (product) =>{
             if (product.ID === id) {
@@ -71,14 +76,18 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                 }
             }
 
-            subtotal += product.precio;
+            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
+            iva += iva_decimal * product.precio;
         return product.ID !== null;
        });
 
 
        setSubtotal(subtotal);
        setTotal(total);
+       setIva(iva);
         setProductsCart(new_products_cart);
         localStorage.setItem('product', JSON.stringify(new_products_cart));
        
@@ -89,6 +98,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
         let subtotal = 0;
         let total = 0;
+        let iva = 0;
 
         let new_products_cart = productsCart.filter( (product) =>{
             if (product.ID === id && product.quantity > 1) {
@@ -97,14 +107,18 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                 
             }
         
-            subtotal += product.precio;
+            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
+            iva += iva_decimal * product.precio;
 
         return product.ID !== null;
        });
         
         setSubtotal(subtotal);
         setTotal(total);
+        setIva(iva);
         setProductsCart(new_products_cart);
         localStorage.setItem('product', JSON.stringify(new_products_cart));
     }
@@ -112,6 +126,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
     const modifyQuantity = (e, id) => {
         let subtotal = 0;
         let total = 0;
+        let iva = 0;
         let input_value = e.target.value;
 
         let new_products_cart = productsCart.filter( (product) => {
@@ -129,15 +144,18 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                 }
             }
 
-            subtotal += product.precio;
+            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
-            
+            iva += iva_decimal * product.precio;
             return product.ID !== null;
 
         });
 
         setSubtotal(subtotal);
        setTotal(total);
+       setIva(iva);
         setProductsCart(new_products_cart);
         localStorage.setItem('product', JSON.stringify(new_products_cart));
 
@@ -175,15 +193,21 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
 
         let total = 0;
         let subtotal = 0;
+        let iva = 0;
+
         let products_cart = localStorage.getItem('product') ? JSON.parse(localStorage.getItem('product')) : [];
 
         products_cart.map( product => {
-            subtotal += product.precio; 
-            total += product.precio; 
+            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product.precio - (iva_decimal * product.precio);
+            total += product.precio;
+            iva += iva_decimal * product.precio; 
         });
         
         setSubtotal(subtotal);
         setTotal(total);
+        setIva(iva);
         //getClientsAPI();
     }, []);
 
@@ -272,7 +296,7 @@ export const Cart = ({productsCart, setProductsCart, subtotal, setSubtotal, tota
                     </div>
                     
                     <div className="col col-33 col-mb-100 position-relative">
-                        <RegisterSend total={total} subtotal={subtotal} productsCart={productsCart} setAlertSuccess={setAlertSuccess}/>
+                        <RegisterSend iva={iva} total={total} subtotal={subtotal} productsCart={productsCart} setAlertSuccess={setAlertSuccess}/>
                     </div>
                 </div>
 

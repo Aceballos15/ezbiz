@@ -854,6 +854,15 @@ img {
         width: 1040px;
     }
 
+    
+    .form__data-cart .form-control {
+        margin: 0.5rem;
+    }
+
+    .cart {
+        width: 100%;
+    }
+
 }
 
 @media (max-width: 992px) {
@@ -922,5 +931,13 @@ img {
 
     .table.cart__table {
         margin-bottom: 3rem;
+    }
+
+    .form-control.small {
+        width: 5rem;
+    }
+
+    .form__data-cart .form-control {
+        margin: 0.5rem;
     }
 }

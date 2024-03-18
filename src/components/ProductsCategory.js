@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
 import { Products } from './Products';
 
-export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts}) => {
+export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva}) => {
     
     let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
@@ -14,6 +14,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
 
         let total = 0;
         let subtotal = 0;
+        let iva = 0;
         
 
         let listCart = JSON.parse(localStorage.getItem('product'));
@@ -35,22 +36,30 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
             }
 
             listCart.map( product => {
-                subtotal += product.precio;
+
+                let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+                console.log(iva_decimal);
+                subtotal += product.precio - (iva_decimal * product.precio);
                 total += product.precio;
+                iva += iva_decimal * product.precio;
             });
 
 
         }else{
             localStorage.setItem('product', JSON.stringify([product_data[0]]));
             setProductsCart([product_data[0]]);
-            subtotal += product_data[0].precio;
-                total += product_data[0].precio;
+
+            let iva_decimal = parseInt(product_data[0].GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product_data[0].precio - (iva_decimal * product_data[0].precio);
+            total += product_data[0].precio;
+            iva += iva_decimal * product_data[0].precio;
 
         }
 
         setTotal(total);
         setSubtotal(subtotal);
-      
+        setIva(iva);
     } 
 
   return (
