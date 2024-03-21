@@ -146,7 +146,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             console.log("Sin errores");
 
             const data_json = {
-                fecha: new Date(),
+                Fecha: new Date(),
                 ID: parseInt(document_id),
                 amount: total,
                 Hora1: "Si"
@@ -161,11 +161,11 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://dbe0-190-0-247-116.ngrok-free.app/signature/1hora';
+            const URL_SIGNATURE = 'https://12d4-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
-
+           // console.log(data_api);
         }
 
        
@@ -601,9 +601,10 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                     let object = {
                             
                         Productos: product.ID,
-                        Precio: product.precio,
+                        Precio_Unitario: product.precio,
                         Cantidad: product.quantity,
-                        Iva_product: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100)
+                        IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
+                        Orden_Id: 0
                     };
 
                     products.push(object);
@@ -612,12 +613,15 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 const order_json = {
                     Fecha: dateNow(),
                     Clientes: idCliente,
-                    referenciaCargador: item.reference,
-                    totalCompra: total,
+
+                    Referencia: item.reference,
+                    Total: total,
                     Subtotal: subtotal,
                     Iva_Total: iva,
                     Estado: "Pending",
-                    Items: products
+                    Estado_De_Pago: "Pending",
+                    Items: products,
+                    Fecha_de_pago: dateNow()
                 } 
 
                 console.log(order_json);
@@ -630,7 +634,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                     body: JSON.stringify(order_json)
                 };
     
-                const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Pedidos_Verizon';
+                const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin_Report';
                   
                 fetch(URl_ORDERS, config_json_order)
                 .then(response => response.json())
@@ -641,7 +645,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 return (
                     <>
                          <form id="formWompi" action="https://checkout.wompi.co/p/" method="GET"> 
-                            <input type="hidden" name="public-key" class="key" defaultValue={item.publicKey} />  
+                            <input type="hidden" name="public-key" class="key" defaultValue={item.public_key} />  
                             <input type="hidden" name="currency" class="currency" defaultValue={item.currency} />
                             <input type="hidden" name="amount-in-cents" class="amount" defaultValue={item.amount} />
                             <input type="hidden" name="reference" class="reference" defaultValue={item.reference} /> 
