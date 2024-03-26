@@ -161,17 +161,17 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://f464-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://b79f-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
-           // console.log(data_api);
+           console.log(data_api);
         }
 
        
     }  
 
-    const registerClient = (e) => {
+    const registerClient = async(e) => {
         e.preventDefault();
 
         const data = e.target;
@@ -254,6 +254,27 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                     console.error('Detalles del error:', errorMessage)
                 }); */
 
+            const data_json = {
+                Fecha: new Date(),
+                ID: parseInt(document_id),
+                amount: total,
+                Hora1: "Si"
+            }
+    
+            const config_json = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_json)
+            };
+    
+            const URL_SIGNATURE = 'https://b79f-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const ngrok_API = await fetch(URL_SIGNATURE, config_json);
+            const data_api = await ngrok_API.json();
+            setFormWompi([data_api]);
+
+          
         }
         
         
@@ -385,7 +406,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
         return fechaFormateada;
     }
 
-    /* useEffect( () => {
+   /*  useEffect( () => {
         
 
         if (formWompi && formWompi.length !== 0) {
@@ -633,7 +654,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                     body: JSON.stringify(order_json)
                 };
     
-                const URl_ORDERS =  'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
+                const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
                   
                 fetch(URl_ORDERS, config_json_order)
                 .then(response => response.json())
