@@ -161,7 +161,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://b79f-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://a62e-2800-e2-bd80-12ec-85e1-d4a8-84be-c055.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
@@ -269,7 +269,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://b79f-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://a62e-2800-e2-bd80-12ec-85e1-d4a8-84be-c055.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
@@ -616,51 +616,63 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
         {formWompi && formWompi.length !== 0 && (
             formWompi.map( item => {
 
-                let products = [];
-                           
-                productsCart.map(product => {
-                    let object = {
-                            
-                        Productos: product.ID,
-                        Precio_Unitario: product.precio,
-                        Cantidad: product.quantity,
-                        IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
-                        Orden_Id: "0"
-                    };
-
-                    products.push(object);
-                });           
-                
-                const order_json = {
-                    Fecha: dateNow(),
-                    Clientes: idCliente,
-                    Referencia: item.reference,
-                    Total: total,
-                    Subtotal: subtotal,
-                    Iva_Total: iva,
-                    Estado: "Pendiente",
-                    Estado_De_Pago: "Pending",
-                    Items: products,
-                    Fecha_de_pago: dateNow()
-                } 
-
-                console.log(order_json);
-
-                const config_json_order = {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify(order_json)
-                };
-    
-                const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
-                  
-                fetch(URl_ORDERS, config_json_order)
-                .then(response => response.json())
+                const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
+                fetch(URL_REMISION)
+                .then(res => res.json())
                 .then(data => {
-                    console.log(data);
+
+                    let zona = parseInt(data[0].Zona.ID);
+                    let products = [];
+                               
+                    productsCart.map(product => {
+                        let object = {
+                                
+                            Productos: product.ID,
+                            Precio_Unitario: product.precio,
+                            Cantidad: product.quantity,
+                            IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
+                            Orden_Id: "0"
+                        };
+    
+                        products.push(object);
+                    });           
+                    
+                    console.log(zona.ID);
+                    const order_json = {
+                        Fecha: dateNow(),
+                        Clientes: idCliente,
+                        Zona: zona,
+                        Referencia: item.reference,
+                        Total: total,
+                        Subtotal: subtotal,
+                        Iva_Total: iva,
+                        Estado: "Pendiente",
+                        Estado_De_Pago: "Pending",
+                        Items: products,
+                        Fecha_de_pago: dateNow()
+                    } 
+    
+                    console.log(order_json);
+    
+                    const config_json_order = {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(order_json)
+                    };
+        
+                    const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
+                      
+                    fetch(URl_ORDERS, config_json_order)
+                    .then(response => response.json())
+                    .then(data => {
+                        console.log(data);
+                    });
+
+
                 });
+
                 
                 
             })
