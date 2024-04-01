@@ -71,7 +71,7 @@ export const MainRouter = () => {
 
                                 return (
                                     <>
-                                        <Route path={group} element={<ProductsCategory category={group} setProductsCar={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts}/>} />
+                                        <Route path={group} element={<ProductsCategory category={group} setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts}/>} />
                                     </>
                                 )
                             } )

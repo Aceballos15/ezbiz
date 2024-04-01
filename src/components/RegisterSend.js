@@ -161,7 +161,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://a62e-2800-e2-bd80-12ec-85e1-d4a8-84be-c055.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://d64b-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
@@ -269,7 +269,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://a62e-2800-e2-bd80-12ec-85e1-d4a8-84be-c055.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://d64b-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
@@ -621,7 +621,16 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 .then(res => res.json())
                 .then(data => {
 
-                    let zona = parseInt(data[0].Zona.ID);
+                    let zona_id = '';
+                    
+                    let zona = data.filter( zona => {
+
+                        zona_id = zona.Zona;
+
+                       return zona !== null;
+                    }); /* parseInt(data[0].Zona.ID); */
+
+                    
                     let products = [];
                                
                     productsCart.map(product => {
@@ -636,12 +645,13 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
     
                         products.push(object);
                     });           
+
                     
-                    console.log(zona.ID);
+                    console.log(zona_id);
                     const order_json = {
                         Fecha: dateNow(),
                         Clientes: idCliente,
-                        Zona: zona,
+                        Zona: zona_id.ID.toString(),
                         Referencia: item.reference,
                         Total: total,
                         Subtotal: subtotal,
