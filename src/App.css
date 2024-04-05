@@ -808,6 +808,7 @@ img {
     width: 14rem;
     padding: 0 2rem;
 }
+ 
 
 
 
@@ -844,7 +845,36 @@ img {
     display: none;
 }
 
+/* Paginación */
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.page-item {
+    list-style: none;
+}
+
+.page-item a {
+    padding: 0.5rem 1rem;
+    background-color: #fff;
+    border: 1px solid #f1f1f1;
+    color: var(--dark-blue);
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.page-item a.active,
+.page-item a:hover{
+    background-color: var(--blue);
+    color: #fff;
+}
+
+.numbers-content {
+    display: flex;
+}
 
 /* ============ Responsive =========== */
 

@@ -67,6 +67,7 @@ export const Products = ({groupProducts}) => {
                         
                     </div>           
                 </div>
+                
             </div>
         </section>
     </>

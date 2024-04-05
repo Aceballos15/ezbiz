@@ -6,6 +6,19 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
     
     let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
+
+    const total_products = products.length;
+    const [productsForPage, setProductsForPage] = useState(6);
+    const [currentPage, setCurrentPage] = useState(1);
+
+    const pageNumbers = [];
+
+
+    for (let i = 1; i < Math.ceil(total_products / productsForPage); i++) {
+       pageNumbers.push(i);
+        
+    }
+
     const addProductCart = async(id) => {
 
         let URL_API = URL_BASE + '%26%26ID%3D' + id;
@@ -62,6 +75,10 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
         setIva(iva);
     } 
 
+
+    // Paginación
+   // const page 
+
   return (
     <>
         {products && products.length !== 0 && (
@@ -80,7 +97,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                                     <div className="products__cont-price">
                                         {/* Cambiar para mas adelante el precio del producto */}
                                         <span className="products__price">{formatNumber(product.Precio_Mayorista, true) } COP</span>
-                                        <span className="products__price-before">$79.900 COP</span>
+                                        {/* <span className="products__price-before">$79.900 COP</span> */}
                                     </div>
                                     
                                 </div>
@@ -88,9 +105,9 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                                 
                             </div>
 
-                            <div className="products__discounts">
+                            {/* <div className="products__discounts">
                                 <span>-37% OFF</span>
-                            </div>
+                            </div> */}
 
                             <div className="products__options">
                                 <button className="btn btn-blue">Comprar</button>
@@ -105,6 +122,32 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                 )
             })
         )}
+
+        <div className='col col-100'>
+            <nav aria-label="pagination-products">
+                <ul class="pagination">
+                    <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                    </li>
+                        {pageNumbers.map(noPage => {
+                            return(
+                                <li class="page-item" key={noPage}>
+                                    <a class="page-link active" href="#">{noPage}</a>
+                                </li>
+                            )
+                        })}
+                       
+                        
+                    <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
     </>
   )
 }
