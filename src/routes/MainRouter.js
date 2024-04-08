@@ -88,7 +88,7 @@ export const MainRouter = () => {
   
           <Footer />
           <Cart productsCart={productsCart} setProductsCart={setProductsCart} iva={iva} setIva={setIva} subtotal={subtotal} setSubtotal={setSubtotal} total={total} setTotal={setTotal} />
-          <DetailProducts productDetail={productDetail}/>
+          <DetailProducts productDetail={productDetail} setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}/>
 
       </BrowserRouter>
   

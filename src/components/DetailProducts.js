@@ -1,7 +1,10 @@
 import React from 'react'
 import { formatNumber } from '../helpers/formatNumbers'
 
-export const DetailProducts = ({productDetail = null}) => {
+export const DetailProducts = ({productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
+
+    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
+
 
     const closeProductDetail = () => {
 
@@ -18,6 +21,62 @@ export const DetailProducts = ({productDetail = null}) => {
         }, 400);
 
     }
+
+    const addProductCart = async(id) => {
+
+        let URL_API = URL_BASE + '%26%26ID%3D' + id;
+        let product_api = await fetch(URL_API);
+        let product_data = await product_api.json();
+
+        let total = 0;
+        let subtotal = 0;
+        let iva = 0;
+        
+
+        let listCart = JSON.parse(localStorage.getItem('product'));
+
+        product_data[0].quantity = 1;
+        product_data[0].precio = parseInt(product_data[0].Precio_Mayorista);
+
+        if (Array.isArray(listCart)) {
+            
+
+            let search_product = listCart.find(product => product.ID === id);
+
+            if (!search_product) {
+
+                listCart.push(product_data[0]);
+    
+                localStorage.setItem('product', JSON.stringify(listCart));
+                setProductsCart(listCart);
+            }
+
+            listCart.map( product => {
+
+                let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+                console.log(iva_decimal);
+                subtotal += product.precio - (iva_decimal * product.precio);
+                total += product.precio;
+                iva += iva_decimal * product.precio;
+            });
+
+
+        }else{
+            localStorage.setItem('product', JSON.stringify([product_data[0]]));
+            setProductsCart([product_data[0]]);
+
+            let iva_decimal = parseInt(product_data[0].GrupoDeProductos.IVA1) / 100;
+
+            subtotal += product_data[0].precio - (iva_decimal * product_data[0].precio);
+            total += product_data[0].precio;
+            iva += iva_decimal * product_data[0].precio;
+
+        }
+
+        setTotal(total);
+        setSubtotal(subtotal);
+        setIva(iva);
+    } 
     
   return (
     <>
@@ -33,13 +92,13 @@ export const DetailProducts = ({productDetail = null}) => {
 
             <div className='container detail__container'>
              
-                    <div className='row'>
-                        <div className='col col-50'>
+                    <div className='row row-center'>
+                        <div className='col col-50 col-mb-100 col-50-sm-mb'>
                             <div className="products__card-img">
                                     <img src={productDetail && productDetail.Imagen_publica.url} alt=""/>
                                 </div>
                             </div>
-                        <div className='col col-50'>
+                        <div className='col col-50 col-mb-100'>
                             <div className="products__card-description">
                                 <span className="products__type">{productDetail && productDetail.GrupoDeProductos.Description}</span>
                                 <h3 className="products__title">{productDetail && productDetail.Referencia}</h3>
@@ -55,7 +114,7 @@ export const DetailProducts = ({productDetail = null}) => {
 
                                 <div className="products__options detail-product">
                                 {/* <button className="btn btn-blue">Comprar</button> */}
-                                    <div className="products__options-product detail-product" >
+                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={() => addProductCart(productDetail.ID)} >
                                         Agregar al carrito
                                         <img src="./img/cart-product.png" alt="" />
                                     </div>

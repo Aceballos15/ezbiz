@@ -15,7 +15,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
     const [citiesDep, setCitiesDep] = useState('');
     const [departaments, setDepartaments] = useState('');
     const [errors, setErrors] = useState([]);
-    const [formWompi, setFormWompi] = useState([]);
+    const [formWompi, setFormWompi] = useState();
     const [idCliente, setIdCliente] = useState('');
     const [loadSuccess, setLoadSuccess] = useState(false);
 
@@ -100,18 +100,21 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
 
                     setEnableRegister(true);
                     setDataUser(null);
+
+                    //Activado solo para cuando no exista un cliente
+                    const alert = document.querySelector('.alert');
+                    const progress = document.querySelector('.alert-progress');
+            
+                    alert.classList.add('active');
+                    progress.classList.add('active');
+            
+                    setTimeout( () => {
+                        alert.classList.remove('active');  
+                        progress.classList.remove('active');         
+                    }, 4000)
                 }
     
-                const alert = document.querySelector('.alert');
-                const progress = document.querySelector('.alert-progress');
-        
-                alert.classList.add('active');
-                progress.classList.add('active');
-        
-                setTimeout( () => {
-                    alert.classList.remove('active');  
-                    progress.classList.remove('active');         
-                }, 4000)
+                
 
                 setError('');
 
@@ -190,6 +193,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
            console.log(data_api); */ 
+
+           console.log(formWompi);
         }
 
        
@@ -297,7 +302,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
-                setFormWompi([data_api]);
+                setFormWompi(data_api);
                 console.log(data_api);
 
                 const cont_success = document.querySelector('#detail-success');
@@ -457,6 +462,87 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             
         }, 400);
 
+    }
+
+    if ( formWompi && formWompi.length !== 0) {
+       
+        const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
+        fetch(URL_REMISION)
+        .then(res => res.json())
+        .then(data => {
+
+            let zona_id = '';
+            
+            let zona = data.filter( zona => {
+
+                zona_id = zona.Zona;
+
+                return zona !== null;
+            }); /* parseInt(data[0].Zona.ID); */
+
+            
+            let products = [];
+                        
+            productsCart.map(product => {
+                let object = {
+                        
+                    Productos: product.ID,
+                    Precio_Unitario: product.precio,
+                    Cantidad: product.quantity,
+                    IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
+                    Orden_Id: "0"
+                };
+
+                products.push(object);
+            });           
+
+            
+            console.log(zona_id);
+            const order_json = {
+                Fecha: dateNow(),
+                Clientes: idCliente,
+                Zona: zona_id.ID.toString(),
+                Referencia: formWompi.reference,
+                Total: total,
+                Subtotal: subtotal,
+                Iva_Total: iva,
+                Estado: "Pendiente",
+                Estado_De_Pago: "Pending",
+                Items: products,
+                Fecha_de_pago: dateNow()
+            } 
+
+            console.log(order_json);
+
+            const config_json_order = {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order_json)
+            };
+
+            const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
+                
+            fetch(URl_ORDERS, config_json_order)
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+
+                setLoadSuccess(true);
+                
+            
+                setTimeout( () => {
+                    window.location.reload();
+                },3000);
+            });
+
+
+        });
+
+            
+            
+     
     }
 
    /*  useEffect( () => {
@@ -660,7 +746,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                         </>
                     ) }
                     <div className="cart__cont-next">
-                    <button type='submit' className="btn btn-blue">Pagar</button>
+                    <button type='submit' className="btn btn-blue">Pedir</button>
                     </div>
                 </form>
                 
@@ -699,87 +785,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             </div>
         </div>
 
-        {formWompi && formWompi.length !== 0 && (
-            formWompi.map( item => {
-
-                const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
-                fetch(URL_REMISION)
-                .then(res => res.json())
-                .then(data => {
-
-                    let zona_id = '';
-                    
-                    let zona = data.filter( zona => {
-
-                        zona_id = zona.Zona;
-
-                       return zona !== null;
-                    }); /* parseInt(data[0].Zona.ID); */
-
-                    
-                    let products = [];
-                               
-                    productsCart.map(product => {
-                        let object = {
-                                
-                            Productos: product.ID,
-                            Precio_Unitario: product.precio,
-                            Cantidad: product.quantity,
-                            IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
-                            Orden_Id: "0"
-                        };
-    
-                        products.push(object);
-                    });           
-
-                    
-                    console.log(zona_id);
-                    const order_json = {
-                        Fecha: dateNow(),
-                        Clientes: idCliente,
-                        Zona: zona_id.ID.toString(),
-                        Referencia: item.reference,
-                        Total: total,
-                        Subtotal: subtotal,
-                        Iva_Total: iva,
-                        Estado: "Pendiente",
-                        Estado_De_Pago: "Pending",
-                        Items: products,
-                        Fecha_de_pago: dateNow()
-                    } 
-    
-                    console.log(order_json);
-    
-                    const config_json_order = {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify(order_json)
-                    };
-        
-                    const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
-                      
-                    fetch(URl_ORDERS, config_json_order)
-                    .then(response => response.json())
-                    .then(data => {
-                        console.log(data);
-
-                        setLoadSuccess(true);
-                        
-                    
-                        setTimeout( () => {
-                            window.location.reload();
-                        },3000);
-                    });
-
-
-                });
-
-                
-                
-            })
-        )}
+       
 
 
     </>
