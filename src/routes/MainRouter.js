@@ -23,7 +23,7 @@ export const MainRouter = () => {
 
 
     const [currentPage, setCurrentPage] = useState(1);
-  
+    const [productDetail, setProductDetail] = useState("");
 
     //Cargar los productos de 1 hora desde la API
     useEffect( () => {
@@ -63,8 +63,8 @@ export const MainRouter = () => {
   
           <main>
               <Routes>
-                  <Route path='/' element={<Products  groupProducts={groupProducts} setCurrentPage={setCurrentPage}/>} >
-                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} currentPage={currentPage} setCurrentPage={setCurrentPage}/>}/>
+                  <Route path='/' element={<Products  groupProducts={groupProducts} setCurrentPage={setCurrentPage} />} >
+                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} currentPage={currentPage} setCurrentPage={setCurrentPage} setProductDetail={setProductDetail}/>}/>
                         { groupProducts && groupProducts.length !== 0 && (
                             groupProducts.map( group => {
                                 let new_products = [];
@@ -77,7 +77,7 @@ export const MainRouter = () => {
 
                                 return (
                                     <>
-                                        <Route path={group} element={<ProductsCategory category={group} setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts} currentPage={currentPage} setCurrentPage={setCurrentPage}/>} />
+                                        <Route path={group} element={<ProductsCategory category={group} setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts} currentPage={currentPage} setCurrentPage={setCurrentPage} setProductDetail={setProductDetail}/>} />
                                     </>
                                 )
                             } )
@@ -88,7 +88,8 @@ export const MainRouter = () => {
   
           <Footer />
           <Cart productsCart={productsCart} setProductsCart={setProductsCart} iva={iva} setIva={setIva} subtotal={subtotal} setSubtotal={setSubtotal} total={total} setTotal={setTotal} />
-            <DetailProducts />
+          <DetailProducts productDetail={productDetail}/>
+
       </BrowserRouter>
   
          

@@ -17,6 +17,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
     const [errors, setErrors] = useState([]);
     const [formWompi, setFormWompi] = useState([]);
     const [idCliente, setIdCliente] = useState('');
+    const [loadSuccess, setLoadSuccess] = useState(false);
 
     const verifyUser = (e) => {
        
@@ -160,12 +161,35 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 },
                 body: JSON.stringify(data_json)
             };
-    
-            const URL_SIGNATURE = 'https://be5c-190-242-117-202.ngrok-free.app/api/v1/api/Signature';
+
+            const URL_SIGNATURE = 'https://6064-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            await fetch(URL_SIGNATURE, config_json)
+            .then(res => res.json())
+            .then(data_api => {
+                setFormWompi([data_api]);
+                console.log(data_api);
+
+                const cont_success = document.querySelector('#detail-success');
+                const trama = document.querySelector('.trama');
+                const cart = document.querySelector("#cart");
+                
+        
+                cart.classList.remove("open-cart");
+                        
+                trama.classList.add('open-trama');
+                cont_success.classList.add('open');
+                setTimeout( () => {
+                    trama.classList.add('open-trama-styles');
+                    cont_success.classList.add('show');
+                    
+                }, 300);
+            });
+
+            /* const URL_SIGNATURE = 'https://6064-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
-           console.log(data_api);
+           console.log(data_api); */ 
         }
 
        
@@ -268,20 +292,33 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 },
                 body: JSON.stringify(data_json)
             };
-    
-            const URL_SIGNATURE = 'https://be5c-190-242-117-202.ngrok-free.app/api/v1/api/Signature';
-            const ngrok_API = await fetch(URL_SIGNATURE, config_json);
-            const data_api = await ngrok_API.json();
-            setFormWompi([data_api]);
 
+            const URL_SIGNATURE = 'https://6064-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            await fetch(URL_SIGNATURE, config_json)
+            .then(res => res.json())
+            .then(data_api => {
+                setFormWompi([data_api]);
+                console.log(data_api);
+
+                const cont_success = document.querySelector('#detail-success');
+                const trama = document.querySelector('.trama');
+                const cart = document.querySelector("#cart");
+                
+        
+                cart.classList.remove("open-cart");
+                        
+                trama.classList.add('open-trama');
+                cont_success.classList.add('open');
+                setTimeout( () => {
+                    trama.classList.add('open-trama-styles');
+                    cont_success.classList.add('show');
+                    
+                }, 300);
+            });
+    
           
         }
         
-        
-
-
-      
-
     }
 
     const getCities = (e) => {
@@ -406,6 +443,22 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
         return fechaFormateada;
     }
 
+    const closeSuccessDetail = () => {
+
+        const cont_detail = document.querySelector('#detail-success');
+        const trama = document.querySelector('.trama');
+
+        cont_detail.classList.remove('show');
+        trama.classList.remove('open-trama-styles');
+        setTimeout( () => {
+            cont_detail.classList.remove('open');
+
+            trama.classList.remove('open-trama');
+            
+        }, 400);
+
+    }
+
    /*  useEffect( () => {
         
 
@@ -414,6 +467,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
         }
 
     }, [formWompi]); */
+    
 
     useEffect( () => {
         const getDepartaments= async() => {
@@ -613,6 +667,38 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             </div>
         </div>
 
+        <div className='detail' id='detail-success'>
+
+            <div className="cart__header-img">
+                <img src="./img/Logo_1Hora 1 blanco.png" alt=""/>
+            </div>
+
+            <div className="cart__close-cart" id="close-cart" onClick={closeSuccessDetail}>
+                <i className="fa-solid fa-xmark"></i>
+            </div>
+
+            <div className='container detail__container'>
+             
+                {loadSuccess ? (
+                    <div className='row'>
+                        <div className='col col-100 center-block'>
+                            <div className='detail__cont-success'>
+                                <i class="fa-regular fa-circle-check"></i>
+                            </div>
+                        </div>
+                        <div className='col col-100 center-block'>
+                            <p>¡Su pedido se ha realizado correctamente!</p>
+                        </div>
+                    </div>
+                ):(
+                    <div className='load-success'> 
+                        <div className='loader'></div>
+                    </div>
+                )}
+                
+            </div>
+        </div>
+
         {formWompi && formWompi.length !== 0 && (
             formWompi.map( item => {
 
@@ -678,6 +764,13 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                     .then(response => response.json())
                     .then(data => {
                         console.log(data);
+
+                        setLoadSuccess(true);
+                        
+                    
+                        setTimeout( () => {
+                            window.location.reload();
+                        },3000);
                     });
 
 
@@ -687,6 +780,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 
             })
         )}
+
+
     </>
   )
 }

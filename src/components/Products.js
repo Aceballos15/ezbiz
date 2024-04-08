@@ -42,38 +42,40 @@ export const Products = ({groupProducts, setCurrentPage}) => {
         {/* Productos */}
         <section className="products section">
             <div className="container">
-                <div className="row">
-                    <div className="col col-25 col-mb-100">
-                         <div className="products__category">
-                            <h3 className="title">Categoría</h3>
-                            <div className="products__cont-categories">
-                            <NavLink to='/' className={ ({isActive}) => linkActive(isActive)}> Todas </NavLink>
-                        
-                        { groupProducts && groupProducts.length !== 0 && ( 
-                            groupProducts.map( group => {
-                                return (
-                                    <>
-                                        <NavLink to={group} className={ ({isActive}) => linkActive(isActive)} onClick={resetCurrentPage}> {group} </NavLink>
-                
-                                    </> 
-                                )          
-                            })
-                         )}
-                          </div>
+          
+                    <div className="row">
+                        <div className="col col-25 col-mb-100">
+                            <div className="products__category">
+                                <h3 className="title">Categoría</h3>
+                                <div className="products__cont-categories">
+                                <NavLink to='/' className={ ({isActive}) => linkActive(isActive)}> Todas </NavLink>
+                            
+                            { groupProducts && groupProducts.length !== 0 && ( 
+                                groupProducts.map( group => {
+                                    return (
+                                        <>
+                                            <NavLink to={group} className={ ({isActive}) => linkActive(isActive)} onClick={resetCurrentPage}> {group} </NavLink>
+                    
+                                        </> 
+                                    )          
+                                })
+                            )}
+                            </div>
+                            </div>
                         </div>
+                        <div className="col col-75 col-mb-100">
+                            <div className="row">
+                                
+                                <Outlet />
+                                
+                            </div>
+                            
+                        </div>           
                     </div>
-                    <div className="col col-75 col-mb-100">
-                        <div className="row">
-                            
-                            <Outlet />
-                            
-                        </div>
-                        
-                    </div>           
-                </div>
                 
             </div>
         </section>
+        
     </>
   ) 
 }

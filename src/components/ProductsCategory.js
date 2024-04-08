@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
 import { Products } from './Products';
 
-export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage}) => {
+export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     
     let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
@@ -89,6 +89,24 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
         setIva(iva);
     } 
 
+    const openProductDetail = (product) => {
+
+        const cont_detail = document.querySelector('#detail-product');
+        const trama = document.querySelector('.trama');
+
+        trama.classList.add('open-trama');
+        cont_detail.classList.add('open');
+        setTimeout( () => {
+            trama.classList.add('open-trama-styles');
+            cont_detail.classList.add('show');
+            
+        }, 300);
+
+        setProductDetail(product);
+
+    }
+
+
 
     // Paginación
    // const page 
@@ -126,7 +144,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
 
                             <div className="products__options">
                                 {/* <button className="btn btn-blue">Comprar</button> */}
-                                <div className="products__options-product">
+                                <div className="products__options-product" onClick={() => openProductDetail(product)}>
                                     <i class="fa-solid fa-info"></i>
                                 </div>
                                 <div className="products__options-product" id={product.ID} onClick={() => addProductCart(product.ID)}>
@@ -170,6 +188,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                 </ul>
             </nav>
         </div>
+
     </>
   )
 }
