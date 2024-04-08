@@ -6,11 +6,12 @@ import { Header } from '../components/layout/Header'
 import { Footer } from '../components/layout/Footer'
 import { Cart } from '../components/Cart'
 import { ProductsCategory } from '../components/ProductsCategory'
+import { DetailProducts } from '../components/DetailProducts'
 
 export const MainRouter = () => {   
 
     //const URL_BASE_GROUP = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/GrupoDeProductos_Report?where=ID%3D1889220000051935384";
-    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
 
     const [productsCart, setProductsCart] = useState(false);
     const [iva, setIva] = useState("");
@@ -19,6 +20,11 @@ export const MainRouter = () => {
 
     const [groupProducts, setGroupProducts] = useState([]);
     const [products, setProducts] = useState(false);
+
+
+    const [currentPage, setCurrentPage] = useState(1);
+  
+
     //Cargar los productos de 1 hora desde la API
     useEffect( () => {
         const getGroupProductsAPI = async() => {
@@ -53,12 +59,12 @@ export const MainRouter = () => {
     return (
       <BrowserRouter>
   
-          <Header total={total} products={products} setProducts={setProducts}/>
+          <Header total={total} products={products} setProducts={setProducts} setCurrentPage={setCurrentPage}/>
   
           <main>
               <Routes>
-                  <Route path='/' element={<Products  groupProducts={groupProducts} />} >
-                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} />}/>
+                  <Route path='/' element={<Products  groupProducts={groupProducts} setCurrentPage={setCurrentPage}/>} >
+                        <Route path='/' element={<ProductsCategory setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal} search="true" products={products} setProducts={setProducts} currentPage={currentPage} setCurrentPage={setCurrentPage}/>}/>
                         { groupProducts && groupProducts.length !== 0 && (
                             groupProducts.map( group => {
                                 let new_products = [];
@@ -71,7 +77,7 @@ export const MainRouter = () => {
 
                                 return (
                                     <>
-                                        <Route path={group} element={<ProductsCategory category={group} setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts}/>} />
+                                        <Route path={group} element={<ProductsCategory category={group} setProductsCart={setProductsCart} setIva={setIva} setSubtotal={setSubtotal} setTotal={setTotal}  products={new_products} setProducts={setProducts} currentPage={currentPage} setCurrentPage={setCurrentPage}/>} />
                                     </>
                                 )
                             } )
@@ -82,7 +88,7 @@ export const MainRouter = () => {
   
           <Footer />
           <Cart productsCart={productsCart} setProductsCart={setProductsCart} iva={iva} setIva={setIva} subtotal={subtotal} setSubtotal={setSubtotal} total={total} setTotal={setTotal} />
-  
+            <DetailProducts />
       </BrowserRouter>
   
          

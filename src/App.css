@@ -41,6 +41,10 @@ img {
     margin: 0 -1rem;
 }
 
+.row.row-center {
+    justify-content: center;
+}
+
 .col {
     padding: 0 1rem;
 }
@@ -63,6 +67,12 @@ img {
 
 .col-25 {
     width: 25%;
+}
+
+.center-block {
+    display: flex;
+    justify-content: center;
+    
 }
 
 .text-center {
@@ -436,7 +446,8 @@ img {
 }
 
 .products__cont-price {
-    padding: 0.5rem 0;
+    padding: 1rem 0;
+ 
 }
 
 .products__price {
@@ -467,27 +478,29 @@ img {
     display: block;
 }
 
-.products__add-product {
+.products__options-product {
     background-color: transparent;
     width: 3rem;
     height: 3rem;
     border-radius: 15px;
     cursor: pointer;
-    font-size: 1.6rem;
+    font-size: 1.3rem;
     display: flex;
     justify-content: center;
     align-items: center;
     color: #000;
     border:1px solid var(--dark-blue);
     transition: all 0.4s ease;
+    color: var(--dark-blue);
 }
 
-.products__add-product:hover {
-    background-color: var(--blue);
+.products__options-product:hover {
+    background-color: #e1e1e1;
+    
     
 }
 
-.products__add-product img {
+.products__options-product img {
     width: 2rem;
     
 }
@@ -497,7 +510,7 @@ img {
     justify-content: center;
     gap: 1rem;
     position: absolute;
-    bottom: 1.4rem;
+    bottom: 1rem;
     left: 0;
     background-color: white;
     opacity: 0;
@@ -591,6 +604,7 @@ img {
     background-color: var(--white);
     padding: 1rem 2rem;
     height: 85vh;
+    overflow: auto;
 }
 
 .table {
@@ -787,6 +801,27 @@ img {
     margin: 1rem 0;
 }
 
+.detail-product {
+    width: 50rem;
+    background-color: #f1f1f1;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    height: 30rem;
+}
+
+.detail-product__container{
+    width: 95%;
+    box-shadow: 3px 3px 6px var(--dark-gray);
+    border-radius: 10px;
+    margin-top: -3.5rem;
+    background-color: var(--white);
+    padding: 1rem 2rem;
+    height: 20rem;
+    overflow: auto;
+}
+
 /* ============ FOOTER ========= */
 
 .footer__text {
@@ -864,6 +899,7 @@ img {
     color: var(--dark-blue);
     text-decoration: none;
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .page-item a.active,
@@ -874,6 +910,10 @@ img {
 
 .numbers-content {
     display: flex;
+}
+
+.page-link.disabled {
+    
 }
 
 /* ============ Responsive =========== */

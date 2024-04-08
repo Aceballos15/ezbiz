@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../../helpers/formatNumbers';
 
-export const Header = ({total, products, setProducts}) => {
+export const Header = ({total, products, setProducts, setCurrentPage}) => {
 
     //const [searchProduct, setSearchProduct] = useState('');
     const [listProducts, setListProducts] = useState([]);
@@ -24,6 +24,7 @@ export const Header = ({total, products, setProducts}) => {
 
 const searchProducts = (e) => {
 
+    setCurrentPage(1);
 
     let search_product = e.target.value.toLowerCase();
         
@@ -55,7 +56,7 @@ useEffect( () => {
 
     const getProductsAPI = async() => {
 
-        const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+        const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
         const products_api = await fetch(URL_BASE);
         const products_data = await products_api.json();
         

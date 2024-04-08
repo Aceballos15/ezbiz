@@ -2,21 +2,35 @@ import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
 import { Products } from './Products';
 
-export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva}) => {
+export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage}) => {
     
-    let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+    let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
-
+     
     const total_products = products.length;
-    const [productsForPage, setProductsForPage] = useState(6);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [productsForPage, setProductsForPage] = useState(12);
+   
 
     const pageNumbers = [];
+    const lastIndex = currentPage * productsForPage;
+    const firstIndex = lastIndex - productsForPage; 
 
-
-    for (let i = 1; i < Math.ceil(total_products / productsForPage); i++) {
+    console.log(currentPage);
+    for (let i = 1; i <= Math.ceil(total_products / productsForPage); i++) {
        pageNumbers.push(i);
         
+    }
+
+    const onPreviusPage = () => {
+        setCurrentPage(currentPage - 1);
+    }
+
+    const onNextPage = () => {
+        setCurrentPage(currentPage + 1);
+    }
+
+    const OnSpecificPage = (n) => {
+        setCurrentPage(n);
     }
 
     const addProductCart = async(id) => {
@@ -81,7 +95,8 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
 
   return (
     <>
-        {products && products.length !== 0 && (
+        {products && products.length !== 0 &&(
+            
             products.map( product => {
                 return(
                     <div className="col col-33 col-mb-50" key={product.id} id={product.ID}>
@@ -110,9 +125,11 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                             </div> */}
 
                             <div className="products__options">
-                                <button className="btn btn-blue">Comprar</button>
-
-                                <div className="products__add-product" id={product.ID} onClick={() => addProductCart(product.ID)}>
+                                {/* <button className="btn btn-blue">Comprar</button> */}
+                                <div className="products__options-product">
+                                    <i class="fa-solid fa-info"></i>
+                                </div>
+                                <div className="products__options-product" id={product.ID} onClick={() => addProductCart(product.ID)}>
                                     <img src="./img/cart-product.png" alt="" />
                                 </div>
                             </div>
@@ -120,30 +137,35 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                         </article>
                     </div>
                 )
-            })
+            }).slice(firstIndex, lastIndex)
         )}
 
         <div className='col col-100'>
             <nav aria-label="pagination-products">
-                <ul class="pagination">
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Previous">
-                        <span aria-hidden="true">&laquo;</span>
-                    </a>
+                <ul className="pagination">
+                    <li className="page-item">
+                        {currentPage !== 1 ? (
+                            <a className="page-link" onClick={onPreviusPage} aria-label="Previous">
+                                <span aria-hidden="true">&laquo;</span>
+                            </a>
+                            
+                        ) : ''}
                     </li>
                         {pageNumbers.map(noPage => {
                             return(
-                                <li class="page-item" key={noPage}>
-                                    <a class="page-link active" href="#">{noPage}</a>
+                                <li className="page-item" key={noPage}>
+                                    <a className={`page-link ${noPage === currentPage ? 'active' : ''}`} onClick={() => OnSpecificPage(noPage)}>{noPage}</a>
                                 </li>
                             )
                         })}
                        
                         
-                    <li class="page-item">
-                    <a class="page-link" href="#" aria-label="Next">
-                        <span aria-hidden="true">&raquo;</span>
-                    </a>
+                    <li className="page-item">
+                        { currentPage < pageNumbers.length ? (
+                            <a className={`page-link`}  onClick={onNextPage} aria-label="Next">
+                                <span aria-hidden="true">&raquo;</span>
+                            </a>
+                        ): ''}
                     </li>
                 </ul>
             </nav>

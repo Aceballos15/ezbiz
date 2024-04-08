@@ -231,7 +231,7 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
                     </div>
                 </div>
 
-                <div className="row">
+                <div className="row row-center">
                     <div className="col col-66 col-mb-100">
                         <table className="table cart__table">
                             <thead>

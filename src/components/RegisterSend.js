@@ -161,7 +161,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://d64b-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://be5c-190-242-117-202.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);
@@ -269,7 +269,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
     
-            const URL_SIGNATURE = 'https://d64b-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://be5c-190-242-117-202.ngrok-free.app/api/v1/api/Signature';
             const ngrok_API = await fetch(URL_SIGNATURE, config_json);
             const data_api = await ngrok_API.json();
             setFormWompi([data_api]);

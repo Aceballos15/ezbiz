@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { NavLink, Outlet } from 'react-router-dom';
 
-export const Products = ({groupProducts}) => {
+export const Products = ({groupProducts, setCurrentPage}) => {
 
     const linkActive = (isActive) => {
         if (isActive) {
@@ -9,6 +9,10 @@ export const Products = ({groupProducts}) => {
         }
 
         return "btn btn-category";
+    }
+
+    const resetCurrentPage = () => {
+        setCurrentPage(1);
     }
     
   return (
@@ -49,7 +53,7 @@ export const Products = ({groupProducts}) => {
                             groupProducts.map( group => {
                                 return (
                                     <>
-                                        <NavLink to={group} className={ ({isActive}) => linkActive(isActive)}> {group} </NavLink>
+                                        <NavLink to={group} className={ ({isActive}) => linkActive(isActive)} onClick={resetCurrentPage}> {group} </NavLink>
                 
                                     </> 
                                 )          
