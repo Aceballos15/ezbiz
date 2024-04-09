@@ -172,7 +172,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://c3b8-2800-e2-bd80-12ec-8973-9942-7bac-8f4d.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://5694-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
@@ -305,7 +305,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://c3b8-2800-e2-bd80-12ec-8973-9942-7bac-8f4d.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://5694-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
