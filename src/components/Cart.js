@@ -9,7 +9,7 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
 
     const [clients, setClients] = useState([]);
     const [alertSuccess, setAlertSuccess] = useState('');
-    
+    const [blockOptions, setBlockOptions] = useState(false);
 
     const closeCart = () => {
         const cart = document.querySelector("#cart");
@@ -261,13 +261,13 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
                                                 <td>
                                                     <div className="cart__quantity">
 
-                                                        <div className="cart__operation cart__minus" id="minus" onClick={(e) => reduceQuantity(e,product.ID)}>
+                                                        <div className="cart__operation cart__minus" id="minus" onClick={!blockOptions ? (e) => reduceQuantity(e,product.ID) : null}>
                                                             <i className="fa-solid fa-minus"></i>
                                                         </div>
 
-                                                        <input type="text" className="cart__input-quantity" id="quantity" onChange={(e) => modifyQuantity(e,product.ID)} value={product.quantity} />
+                                                        <input type="text" className="cart__input-quantity" id="quantity" onChange={!blockOptions ? (e) => modifyQuantity(e,product.ID) : null} value={product.quantity} disabled={blockOptions ? true : false}/>
 
-                                                        <div className="cart__operation cart__plus" id="plus" onClick={(e) => increaseQuantity(e,product.ID)}>
+                                                        <div className="cart__operation cart__plus" id="plus" onClick={!blockOptions ? (e) => increaseQuantity(e,product.ID): null}>
                                                             <i className="fa-solid fa-plus"></i>
 
                                                         </div>
@@ -275,7 +275,7 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
                                                 </td>
                                                 <td className="text-center">{formatNumber(product.precio, true)}</td>
                                                 <td className="text-center "> 
-                                                    <div className="cart__delete" id={product.ID} onClick={ () => deleteProductCart(product.ID) }>
+                                                    <div className="cart__delete" id={product.ID} onClick={ !blockOptions ? () => deleteProductCart(product.ID) : null }>
                                                         <i className="fa-solid fa-xmark"></i> 
                                                     </div>
                                                 </td>
@@ -293,10 +293,62 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
                             </tbody>
 
                         </table>
+                        <div className='cart__product'>
+                            {productsCart && productsCart.length !== 0 ? (
+                                productsCart.map(product => {
+                                    return (
+                                    <div className='cart__item-product'>
+                                        <div className='row row-center'>
+                                            <div className='col col-30'>
+                                                <div className="products__card-img">
+                                                    <img src={product.Imagen_publica.url} alt=""/>
+                                                </div>
+                                            </div>
+                                            <div className='col col-60 no-padding'>
+                                                <div className="cart__information">
+                                                    <span className="cart__name-product">{product.Referencia}</span>
+                                                    <span className="cart__category">{product.GrupoDeProductos.Description}</span>
+                                                </div>
+                                                <div className='cart__quantity-price'>
+                                                    <div className="cart__quantity">
+
+                                                        <div className="cart__operation cart__minus" id="minus" onClick={!blockOptions ? (e) => reduceQuantity(e,product.ID) : null}>
+                                                            <i className="fa-solid fa-minus"></i>
+                                                        </div>
+
+                                                        <input type="text" className="cart__input-quantity" id="quantity" onChange={!blockOptions ? (e) => modifyQuantity(e,product.ID) : null} value={product.quantity} disabled={blockOptions ? true : false}/>
+
+                                                        <div className="cart__operation cart__plus" id="plus" onClick={!blockOptions ? (e) => increaseQuantity(e,product.ID): null}>
+                                                            <i className="fa-solid fa-plus"></i>
+
+                                                        </div>
+                                                    </div>
+
+                                                    <span className='cart__price'>{formatNumber(product.precio, true)}</span>
+
+                                                </div>
+                                            </div>
+                                            <div className='col col-10 center-block'>
+                                                <div className="cart__delete" id={product.ID} onClick={ !blockOptions ? () => deleteProductCart(product.ID) : null }>
+                                                        <i className="fa-solid fa-xmark"></i> 
+                                                    </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    )
+                                })
+                            ) : ( 
+                                <tr>
+                                    <td colspan="4" className='text-center'>El carrito esta vacío</td>
+                                </tr> 
+                            )}
+                        </div>
+                        
+
                     </div>
                     
                     <div className="col col-33 col-mb-100 position-relative">
-                        <RegisterSend iva={iva} total={total} subtotal={subtotal} productsCart={productsCart} setAlertSuccess={setAlertSuccess}/>
+                        <RegisterSend iva={iva} total={total} subtotal={subtotal} productsCart={productsCart} setProductsCart={setProductsCart} setAlertSuccess={setAlertSuccess} setBlockOptions={setBlockOptions}/>
                     </div>
                 </div>
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers';
 
-export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSuccess}) => {
+export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCart, setAlertSuccess, setBlockOptions}) => {
 
     const URL_CLIENTS = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report";
     const URL_CITIES = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Municipio1";
@@ -24,7 +24,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
 
         e.preventDefault();
         let id = e.target.document_id.value;
-
+        let tipo = e.target.type_document.value;
         
         let exist = false;
         let errorMessage = '';
@@ -32,9 +32,16 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
         let load = document.querySelector('.load');
         
 
+       console.log(tipo);
+
         if ( id.length === 0 ) {
             errorMessage = 'Campo vacío, ingresa tu documento';
-            console.log("vacio");
+           
+        }
+
+        if ( tipo.length === 0 || tipo === 'Tipo') {
+            errorMessage = 'Campo vacío, ingresa el tipo de documento';
+           
         }
 
         if (id.length > 11) {
@@ -45,7 +52,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
         setAlertSuccess(false);
     if (errorMessage.length === 0) {
         load.classList.add('show');
-        fetch(URL_CLIENTS + `?where=Documento.contains(%22${id}%22)`)
+        fetch(URL_CLIENTS + `?where=Documento%3D%3D%22${id}%22%26%26Tipo1%3D%3D%22${tipo}%22`)
         .then(response => response.json())
         .then(data => {
 
@@ -114,7 +121,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                     }, 4000)
                 }
     
-                
+                setBlockOptions(true);
 
                 setError('');
 
@@ -165,7 +172,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://6064-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://c3b8-2800-e2-bd80-12ec-8973-9942-7bac-8f4d.ngrok-free.app/api/v1/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
@@ -298,7 +305,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://6064-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://c3b8-2800-e2-bd80-12ec-8973-9942-7bac-8f4d.ngrok-free.app/api/v1/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
@@ -353,6 +360,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
 
         form_send.classList.remove('show');
         form_resumen.classList.remove('hide');
+
+        setBlockOptions(false);
     }
 
     const verifyInputs = (input) => {
@@ -462,6 +471,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
             
         }, 400);
 
+        
+
     }
 
     if ( formWompi && formWompi.length !== 0) {
@@ -530,8 +541,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                 console.log(data);
 
                 setLoadSuccess(true);
-                
-            
+                localStorage.removeItem('product');
+
                 setTimeout( () => {
                     window.location.reload();
                 },3000);
@@ -629,13 +640,15 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setAlertSucces
                                     <option value="pasaporte">PPT</option>
                                 </select>
 
-                                <div className='text-center'>
-                                    <input type="text" className="form-control" name='document_id' id='document_id' placeholder="Número de documento" max='11'/>
-                                    <span className="text-error">{error}</span>
-                                </div>
+                               
+                                <input type="text" className="form-control" name='document_id' id='document_id' placeholder="Número de documento" max='11'/>
+                                  
+                                
                                 
                             </div>
-
+                            <div className='text-center'>
+                                     <span className="text-error">{error}</span>
+                                </div> 
                             <div className="cart__cont-next">
                                 <button type='submit' className="btn btn-blue">Continuar</button>
                                 <div className='load'> 
