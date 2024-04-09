@@ -1164,4 +1164,13 @@ img {
     .no-padding{
         padding: 0;
     }
+
+    .cart__product {
+        display: flex;
+        justify-content: center;
+    }
+
+    .cart__product td{
+        padding-bottom: 1rem;
+    }
 }
