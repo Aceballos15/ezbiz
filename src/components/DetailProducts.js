@@ -1,5 +1,5 @@
 import React from 'react'
-import { formatNumber } from '../helpers/formatNumbers'
+import { formatNumber } from '../helpers/formatNumbers.js'
 
 export const DetailProducts = ({productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
 

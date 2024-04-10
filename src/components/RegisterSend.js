@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { formatNumber } from '../helpers/formatNumbers';
+import { formatNumber } from '../helpers/formatNumbers.js';
 
 export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCart, setAlertSuccess, setBlockOptions}) => {
 

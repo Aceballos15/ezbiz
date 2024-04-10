@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { formatNumber } from '../helpers/formatNumbers';
-import { RegisterSend } from './RegisterSend';
+import { formatNumber } from '../helpers/formatNumbers.js';
+import { RegisterSend } from './RegisterSend.js';
 
 export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setSubtotal, total, setTotal}) => {
     // const [listCart, setListCart] = useState([]);

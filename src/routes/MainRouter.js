@@ -1,12 +1,12 @@
 
 import React, { useEffect, useState } from 'react'
 import {BrowserRouter, Navigate, NavLink, Route, Routes} from "react-router-dom"
-import { Products } from '../components/Products'
-import { Header } from '../components/layout/Header'
-import { Footer } from '../components/layout/Footer'
-import { Cart } from '../components/Cart'
-import { ProductsCategory } from '../components/ProductsCategory'
-import { DetailProducts } from '../components/DetailProducts'
+import { Products } from '../components/Products.js'
+import { Header } from '../components/layout/Header.js'
+import { Footer } from '../components/layout/Footer.js'
+import { Cart } from '../components/Cart.js'
+import { ProductsCategory } from '../components/ProductsCategory.js'
+import { DetailProducts } from '../components/DetailProducts.js'
 
 export const MainRouter = () => {   
 

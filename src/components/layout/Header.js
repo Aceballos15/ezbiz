@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { formatNumber } from '../../helpers/formatNumbers';
+import { formatNumber } from '../../helpers/formatNumbers.js';
 
 export const Header = ({total, products, setProducts, setCurrentPage}) => {
 

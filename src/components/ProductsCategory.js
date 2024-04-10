@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { formatNumber } from '../helpers/formatNumbers';
-import { Products } from './Products';
+import { formatNumber } from '../helpers/formatNumbers.js';
+import { Products } from './Products.js';
 
 export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     

@@ -1,4 +1,5 @@
-{
+{ 
+  "type": "module",
   "name": "1hora",
   "version": "0.1.0",
   "private": true,
