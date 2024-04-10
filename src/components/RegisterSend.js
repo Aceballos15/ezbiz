@@ -52,7 +52,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         setAlertSuccess(false);
     if (errorMessage.length === 0) {
         load.classList.add('show');
-        fetch(URL_CLIENTS + `?where=Documento%3D%3D%22${id}%22%26%26Tipo1%3D%3D%22${tipo}%22`)
+        fetch(URL_CLIENTS + `?where=Documento%3D%3D%22${id}%22`)
         .then(response => response.json())
         .then(data => {
 
@@ -172,7 +172,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://5694-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/v1/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
@@ -305,7 +305,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://5694-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/v1/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
@@ -616,15 +616,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     <p className="cart__total">Total:  <span>{formatNumber(total, true)} </span></p>
                 </div>
 
-                <div className="cart__methods">
-                    <p className="text-center">Puedes usar cualquiera de los siguientes medios de pago</p>
-                    <div className="cart__payment-types">
-                        <span> <img src="./img/payment-pages/bancolombia.png" alt=""/> Bancolombia </span>
-                        <span> <img src="./img/payment-pages/tarjetacredito.png" alt=""/> Tarjeta de Crédito/Débito </span>
-                        <span> <img src="./img/payment-pages/pse.png" alt=""/> PSE </span>
-
-                    </div>
-                </div>
+                
                 {productsCart && productsCart.length !== 0 && (
                     <>
                     <div className="cart__data-user">

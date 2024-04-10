@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js';
 import { RegisterSend } from './RegisterSend.js';
 
-export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setSubtotal, total, setTotal}) => {
+export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, setSubtotal, total, setTotal}) => {
     // const [listCart, setListCart] = useState([]);
 
     
@@ -49,6 +49,8 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
             total += product.precio;
             iva += iva_decimal * product.precio;
         });
+
+  
 
         setTotal(total);
         setSubtotal(subtotal);
@@ -134,7 +136,7 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
             if (product.ID === id) {
                 product.quantity = input_value;
                 
-                if (product.quantity > 0) {
+                if (product.quantity >= 1) {
                     
                     product.precio = parseInt(product.Precio_Mayorista) * product.quantity;
                     
@@ -152,6 +154,8 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
             return product.ID !== null;
 
         });
+
+        
 
         setSubtotal(subtotal);
        setTotal(total);
@@ -182,11 +186,6 @@ export const Cart = ({productsCart, setProductsCart, iva, setIva, subtotal, setS
         alert.classList.remove('active');
         progress.classList.remove('active'); 
     }
-
-
-     
-
-   
 
     useEffect( () => {
         getListCart();

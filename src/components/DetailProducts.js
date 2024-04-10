@@ -1,10 +1,10 @@
 import React from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js'
 
-export const DetailProducts = ({productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
+export const DetailProducts = ({productsCart, productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
 
     const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
-
+    console.log(productsCart);
 
     const closeProductDetail = () => {
 
@@ -73,6 +73,17 @@ export const DetailProducts = ({productDetail = null,  setProductsCart, setSubto
 
         }
 
+        const alert = document.querySelector('.alert');
+        const progress = document.querySelector('.alert-progress');
+
+        alert.classList.add('active');
+        progress.classList.add('active');
+
+        setTimeout( () => {
+            alert.classList.remove('active');  
+            progress.classList.remove('active');         
+        }, 4000)
+
         setTotal(total);
         setSubtotal(subtotal);
         setIva(iva);
@@ -114,9 +125,9 @@ export const DetailProducts = ({productDetail = null,  setProductsCart, setSubto
 
                                 <div className="products__options detail-product">
                                 {/* <button className="btn btn-blue">Comprar</button> */}
-                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={() => addProductCart(productDetail.ID)} >
-                                        Agregar al carrito
-                                        <img src="./img/cart-product.png" alt="" />
+                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={productsCart.find(item => item.ID === productDetail.ID) ? null : () => addProductCart(productDetail.ID)} >
+                                    { productsCart.find(item => item.ID === productDetail.ID) ? (<>En el carrito <i class="fa-solid fa-check"></i></>) : (<>Agregar al carrito <img src="./img/cart-product.png" alt="" /> </>) }
+                                        
                                     </div>
                                 </div>
                                 

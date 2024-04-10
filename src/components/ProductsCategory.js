@@ -2,15 +2,16 @@ import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js';
 import { Products } from './Products.js';
 
-export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
+export const ProductsCategory = ({category = '', productsCart, setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     
     let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
+    
      
     const total_products = products.length;
     const [productsForPage, setProductsForPage] = useState(12);
-   
 
+   
     const pageNumbers = [];
     const lastIndex = currentPage * productsForPage;
     const firstIndex = lastIndex - productsForPage; 
@@ -84,6 +85,17 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
 
         }
 
+        const alert = document.querySelector('.alert');
+        const progress = document.querySelector('.alert-progress');
+
+        alert.classList.add('active');
+        progress.classList.add('active');
+
+        setTimeout( () => {
+            alert.classList.remove('active');  
+            progress.classList.remove('active');         
+        }, 4000)
+
         setTotal(total);
         setSubtotal(subtotal);
         setIva(iva);
@@ -106,6 +118,16 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
 
     }
 
+    const closeAlert = () => {
+
+        const alert = document.querySelector('.alert');
+        const progress = document.querySelector('.alert-progress');
+
+        alert.classList.remove('active');
+        progress.classList.remove('active'); 
+    }
+
+
 
 
     // Paginación
@@ -117,7 +139,7 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
             
             products.map( product => {
                 return(
-                    <div className="col col-33 col-mb-50" key={product.id} id={product.ID}>
+                    <div className="col col-33 col-mb-50" key={product.id}>
                         <article className="products__card-product">
                             <div className="products__card-img">
                                 <img src={product.Imagen_publica.url} alt=""/>
@@ -145,10 +167,10 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                             <div className="products__options">
                                 {/* <button className="btn btn-blue">Comprar</button> */}
                                 <div className="products__options-product" onClick={() => openProductDetail(product)}>
-                                    <i class="fa-solid fa-info"></i>
+                                     <img src="./img/icon-details.svg" alt="" />
                                 </div>
-                                <div className="products__options-product" id={product.ID} onClick={() => addProductCart(product.ID)}>
-                                    <img src="./img/cart-product.png" alt="" />
+                                <div className="products__options-product" id={product.ID} onClick={productsCart.find(item => item.ID === product.ID) ? null : () => addProductCart(product.ID) }>
+                                    { productsCart.find(item => item.ID === product.ID) ? (<i class="fa-solid fa-check"></i>) : (<img src="./img/cart-product.png" alt="" />) }    
                                 </div>
                             </div>
 
@@ -188,7 +210,25 @@ export const ProductsCategory = ({category = '', setProductsCart, setSubtotal, s
                 </ul>
             </nav>
         </div>
+        
 
+        <div className='alert'>
+            <div className='alert-content'>
+                <i class="fa-solid fa-circle-check blue"></i>
+             
+                <div className='alert-description'>
+                  
+                        <span className='text-bold'>Agregado al carrito</span>
+                       
+                                       
+                    
+                </div>
+                <div className='alert-close' onClick={closeAlert}>
+                    <i class="fa-solid fa-xmark"></i>
+                </div>
+            </div>
+            <div className='alert-progress'></div>
+        </div>
     </>
   )
 }
