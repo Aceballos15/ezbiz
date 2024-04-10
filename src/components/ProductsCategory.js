@@ -169,8 +169,8 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
                                 <div className="products__options-product" onClick={() => openProductDetail(product)}>
                                      <img src="./img/icon-details.svg" alt="" />
                                 </div>
-                                <div className="products__options-product" id={product.ID} onClick={productsCart.find(item => item.ID === product.ID) ? null : () => addProductCart(product.ID) }>
-                                    { productsCart.find(item => item.ID === product.ID) ? (<i class="fa-solid fa-check"></i>) : (<img src="./img/cart-product.png" alt="" />) }    
+                                <div className="products__options-product" id={product.ID} onClick={productsCart !== null && productsCart.find(item => item.ID === product.ID) ? null : () => addProductCart(product.ID) }>
+                                    {productsCart !== null && productsCart.find(item => item.ID === product.ID) ? (<i class="fa-solid fa-check"></i>) : (<img src="./img/cart-product.png" alt="" />) }    
                                 </div>
                             </div>
 

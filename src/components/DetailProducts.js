@@ -4,7 +4,7 @@ import { formatNumber } from '../helpers/formatNumbers.js'
 export const DetailProducts = ({productsCart, productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
 
     const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
-    console.log(productsCart);
+    
 
     const closeProductDetail = () => {
 
@@ -125,8 +125,8 @@ export const DetailProducts = ({productsCart, productDetail = null,  setProducts
 
                                 <div className="products__options detail-product">
                                 {/* <button className="btn btn-blue">Comprar</button> */}
-                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={productsCart.find(item => item.ID === productDetail.ID) ? null : () => addProductCart(productDetail.ID)} >
-                                    { productsCart.find(item => item.ID === productDetail.ID) ? (<>En el carrito <i class="fa-solid fa-check"></i></>) : (<>Agregar al carrito <img src="./img/cart-product.png" alt="" /> </>) }
+                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={ productsCart !== null && productsCart.find(item => item.ID === productDetail.ID) ? null : () => addProductCart(productDetail.ID)} >
+                                    {productsCart !== null && productsCart.find(item => item.ID === productDetail.ID) ? (<>En el carrito <i class="fa-solid fa-check"></i></>) : (<>Agregar al carrito <img src="./img/cart-product.png" alt="" /> </>) }
                                         
                                     </div>
                                 </div>

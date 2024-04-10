@@ -13,13 +13,13 @@ export const MainRouter = () => {
     //const URL_BASE_GROUP = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/GrupoDeProductos_Report?where=ID%3D1889220000051935384";
     const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
 
-    const [productsCart, setProductsCart] = useState(false);
+    const [productsCart, setProductsCart] = useState(null);
     const [iva, setIva] = useState("");
     const [subtotal, setSubtotal] = useState("");
     const [total, setTotal] = useState("");
 
     const [groupProducts, setGroupProducts] = useState([]);
-    const [products, setProducts] = useState(false);
+    const [products, setProducts] = useState([]);
 
 
     const [currentPage, setCurrentPage] = useState(1);
