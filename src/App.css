@@ -1187,4 +1187,8 @@ img {
     .cart__product td{
         padding-bottom: 1rem;
     }
+
+    .container.cart__container {
+        padding-bottom: 13.5rem;
+    }
 }

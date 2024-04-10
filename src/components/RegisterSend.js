@@ -160,7 +160,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 Fecha: new Date(),
                 ID: parseInt(document_id),
                 amount: total,
-                Hora1: "Si"
+                E_Cormers: "1hr"
             }
     
             const config_json = {
@@ -172,7 +172,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
@@ -294,7 +294,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 Fecha: new Date(),
                 ID: parseInt(document_id),
                 amount: total,
-                Hora1: "Si"
+                E_Cormers: "1hr"
             }
     
             const config_json = {
@@ -305,7 +305,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 body: JSON.stringify(data_json)
             };
 
-            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/v1/api/Signature';
+            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/Signature';
             await fetch(URL_SIGNATURE, config_json)
             .then(res => res.json())
             .then(data_api => {
