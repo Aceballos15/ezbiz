@@ -1,6 +1,7 @@
-{ 
+{
   "type": "module",
   "name": "1hora",
+  
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -15,8 +16,7 @@
     "webpack-dev-server": "^4.15.2"
   },
   "scripts": {
-
-    "start": "react-scripts start webpack-dev-server --output-public-path=/build",
+    "start": "react-scripts start",
     "build": "react-scripts build webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
