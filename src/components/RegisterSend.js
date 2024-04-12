@@ -475,95 +475,91 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
     }
 
-    if ( formWompi && formWompi.length !== 0) {
-       
-        const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
-        fetch(URL_REMISION)
-        .then(res => res.json())
-        .then(data => {
-
-            let zona_id = '';
-            
-            let zona = data.filter( zona => {
-
-                zona_id = zona.Zona;
-
-                return zona !== null;
-            }); /* parseInt(data[0].Zona.ID); */
-
-            
-            let products = [];
-                        
-            productsCart.map(product => {
-                let object = {
-                        
-                    Productos: product.ID,
-                    Precio_Unitario: product.precio,
-                    Cantidad: product.quantity,
-                    IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
-                    Orden_Id: "0"
-                };
-
-                products.push(object);
-            });           
-
-            
-            console.log(zona_id);
-            const order_json = {
-                Fecha: dateNow(),
-                Clientes: idCliente,
-                Zona: zona_id.ID.toString(),
-                Referencia: formWompi.reference,
-                Total: total,
-                Subtotal: subtotal,
-                Iva_Total: iva,
-                Estado: "Pendiente",
-                Estado_De_Pago: "Pending",
-                Items: products,
-                Fecha_de_pago: dateNow()
-            } 
-
-            console.log(order_json);
-
-            const config_json_order = {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(order_json)
-            };
-
-            const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
-                
-            fetch(URl_ORDERS, config_json_order)
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-
-                setLoadSuccess(true);
-                localStorage.removeItem('product');
-
-                setTimeout( () => {
-                    window.location.reload();
-                },3000);
-            });
-
-
-        });
-
-            
-            
-     
-    }
-
-   /*  useEffect( () => {
+    useEffect( () => {
         
 
-        if (formWompi && formWompi.length !== 0) {
-            document.getElementById("formWompi").submit();
+        if ( formWompi && formWompi.length !== 0) {
+       
+            const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
+            fetch(URL_REMISION)
+            .then(res => res.json())
+            .then(data => {
+    
+                let zona_id = '';
+                
+                let zona = data.filter( zona => {
+    
+                    zona_id = zona.Zona;
+    
+                    return zona !== null;
+                }); /* parseInt(data[0].Zona.ID); */
+    
+                
+                let products = [];
+                            
+                productsCart.map(product => {
+                    let object = {
+                            
+                        Productos: product.ID,
+                        Precio_Unitario: product.precio,
+                        Cantidad: product.quantity,
+                        IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
+                        Orden_Id: "0"
+                    };
+    
+                    products.push(object);
+                });           
+    
+                
+                console.log(zona_id);
+                const order_json = {
+                    Fecha: dateNow(),
+                    Clientes: idCliente,
+                    Zona: zona_id.ID.toString(),
+                    Referencia: formWompi.reference,
+                    Total: total,
+                    Subtotal: subtotal,
+                    Iva_Total: iva,
+                    Estado: "Pendiente",
+                    Estado_De_Pago: "Pending",
+                    Items: products,
+                    Fecha_de_pago: dateNow()
+                } 
+    
+                console.log(order_json);
+    
+                const config_json_order = {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(order_json)
+                };
+    
+                const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
+                    
+                fetch(URl_ORDERS, config_json_order)
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+    
+                    setLoadSuccess(true);
+                    localStorage.removeItem('product');
+    
+                    setTimeout( () => {
+                        window.location.reload();
+                    },3000);
+                });
+    
+    
+            });
+    
+                
+                
+         
         }
 
-    }, [formWompi]); */
+    }, [formWompi]);
     
 
     useEffect( () => {
