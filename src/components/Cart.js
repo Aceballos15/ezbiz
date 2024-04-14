@@ -129,6 +129,11 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         let subtotal = 0;
         let total = 0;
         let iva = 0;
+
+        // No permitir ingresar caracteres que no sean números
+        e.target.value = e.target.value.replace(/\D/g, '');
+        e.target.value = e.target.value !== "0" ? e.target.value : 1;
+
         let input_value = e.target.value;
 
         let new_products_cart = productsCart.filter( (product) => {

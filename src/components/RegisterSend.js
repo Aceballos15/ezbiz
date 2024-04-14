@@ -29,7 +29,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         let exist = false;
         let errorMessage = '';
 
-        let load = document.querySelector('.load');
+        let load = document.querySelector('.load-send');
         
 
        console.log(tipo);
@@ -502,7 +502,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                             
                         Productos: product.ID,
                         Precio_Unitario: product.precio,
-                        Cantidad: product.quantity,
+                        Cantidad: product.quantity.length !== 0 ? product.quantity : 1,
                         IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
                         Orden_Id: "0"
                     };
@@ -635,14 +635,14 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                                 
                             </div>
                             <div className='text-center'>
-                                     <span className="text-error">{error}</span>
-                                </div> 
+                                <span className="text-error">{error}</span>
+                            </div> 
                             <div className="cart__cont-next">
                                 <button type='submit' className="btn btn-blue">Continuar</button>
-                                <div className='load'> 
+                                <div className='load load-send'> 
                                     <div className='loader'></div>
                                 </div>
-                                </div>
+                             </div>
                                 
                         </form>
 

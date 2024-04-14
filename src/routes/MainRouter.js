@@ -29,6 +29,9 @@ export const MainRouter = () => {
     //Cargar los productos de 1 hora desde la API
     useEffect( () => {
         const getGroupProductsAPI = async() => {
+
+            const load = document.querySelector('.load-display');
+
             const group_products_api = await fetch(URL_BASE);
     
             const group_products_data = await group_products_api.json();
@@ -40,6 +43,12 @@ export const MainRouter = () => {
 
             categories = [...new Set(categories)];
             setGroupProducts(categories);
+
+            await load.classList.add('opacity');
+            await setTimeout( () => {
+                load.classList.add('hide');
+            },300);
+
         }
    
         getGroupProductsAPI();

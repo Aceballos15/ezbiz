@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js';
 import { Products } from './Products.js';
+import { addProductCart } from '../helpers/addProductsCart.js';
 
 export const ProductsCategory = ({category = '', productsCart, setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     
@@ -11,12 +12,11 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
     const total_products = products.length;
     const [productsForPage, setProductsForPage] = useState(12);
 
-   
     const pageNumbers = [];
     const lastIndex = currentPage * productsForPage;
     const firstIndex = lastIndex - productsForPage; 
 
-    console.log(currentPage);
+    //Paginación
     for (let i = 1; i <= Math.ceil(total_products / productsForPage); i++) {
        pageNumbers.push(i);
         
@@ -34,72 +34,11 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
         setCurrentPage(n);
     }
 
-    const addProductCart = async(id) => {
+  //Agregar productos al carrito
+    const addProduct = async(e,id) => {
 
-        let URL_API = URL_BASE + '%26%26ID%3D' + id;
-        let product_api = await fetch(URL_API);
-        let product_data = await product_api.json();
-
-        let total = 0;
-        let subtotal = 0;
-        let iva = 0;
-        
-
-        let listCart = JSON.parse(localStorage.getItem('product'));
-
-        product_data[0].quantity = 1;
-        product_data[0].precio = parseInt(product_data[0].Precio_Mayorista);
-
-        if (Array.isArray(listCart)) {
-            
-
-            let search_product = listCart.find(product => product.ID === id);
-
-            if (!search_product) {
-
-                listCart.push(product_data[0]);
-    
-                localStorage.setItem('product', JSON.stringify(listCart));
-                setProductsCart(listCart);
-            }
-
-            listCart.map( product => {
-
-                let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
-                console.log(iva_decimal);
-                subtotal += product.precio - (iva_decimal * product.precio);
-                total += product.precio;
-                iva += iva_decimal * product.precio;
-            });
-
-
-        }else{
-            localStorage.setItem('product', JSON.stringify([product_data[0]]));
-            setProductsCart([product_data[0]]);
-
-            let iva_decimal = parseInt(product_data[0].GrupoDeProductos.IVA1) / 100;
-
-            subtotal += product_data[0].precio - (iva_decimal * product_data[0].precio);
-            total += product_data[0].precio;
-            iva += iva_decimal * product_data[0].precio;
-
-        }
-
-        const alert = document.querySelector('.alert');
-        const progress = document.querySelector('.alert-progress');
-
-        alert.classList.add('active');
-        progress.classList.add('active');
-
-        setTimeout( () => {
-            alert.classList.remove('active');  
-            progress.classList.remove('active');         
-        }, 4000)
-
-        setTotal(total);
-        setSubtotal(subtotal);
-        setIva(iva);
-    } 
+        addProductCart(e, id, URL_BASE, setProductsCart, setTotal, setSubtotal, setIva);
+    }
 
     const openProductDetail = (product) => {
 
@@ -169,8 +108,18 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
                                 <div className="products__options-product" onClick={() => openProductDetail(product)}>
                                      <img src="./img/icon-details.svg" alt="" />
                                 </div>
-                                <div className="products__options-product" id={product.ID} onClick={productsCart !== null && productsCart.find(item => item.ID === product.ID) ? null : () => addProductCart(product.ID) }>
-                                    {productsCart !== null && productsCart.find(item => item.ID === product.ID) ? (<i class="fa-solid fa-check"></i>) : (<img src="./img/cart-product.png" alt="" />) }    
+                                <div className="products__options-product option-add-product" id={product.ID} onClick={productsCart !== null && productsCart.find(item => item.ID === product.ID) ? null : (e) => addProduct(e,product.ID) }>
+                                    {productsCart !== null && productsCart.find(item => item.ID === product.ID) ? (
+                                    <i class="fa-solid fa-check"></i>
+                                    ) : (
+                                        <>
+                                         <div className='load-add-cart display-none'>
+                                            <div className='loader'></div>
+                                        </div>
+                                        <img src="./img/cart-product.png" alt="" />
+                                        </>
+                                    
+                                    ) }    
                                 </div>
                             </div>
 

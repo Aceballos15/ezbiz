@@ -26,7 +26,12 @@ export const Footer = () => {
             </div>
         </div>
     </footer>
-
+    <div className='load load-display'> 
+        <div className='logo-display'>
+            <img src='./img/Logo_1Hora 1.png'></img>
+        </div>
+        <div className='loader'></div>
+    </div>
    
     
     </>

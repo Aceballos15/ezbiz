@@ -1,5 +1,6 @@
 import React from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js'
+import { addProductCart } from '../helpers/addProductsCart.js';
 
 export const DetailProducts = ({productsCart, productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
 
@@ -22,71 +23,10 @@ export const DetailProducts = ({productsCart, productDetail = null,  setProducts
 
     }
 
-    const addProductCart = async(id) => {
+    //Agregar productos al carrito
+    const addProduct = async(e,id) => {
 
-        let URL_API = URL_BASE + '%26%26ID%3D' + id;
-        let product_api = await fetch(URL_API);
-        let product_data = await product_api.json();
-
-        let total = 0;
-        let subtotal = 0;
-        let iva = 0;
-        
-
-        let listCart = JSON.parse(localStorage.getItem('product'));
-
-        product_data[0].quantity = 1;
-        product_data[0].precio = parseInt(product_data[0].Precio_Mayorista);
-
-        if (Array.isArray(listCart)) {
-            
-
-            let search_product = listCart.find(product => product.ID === id);
-
-            if (!search_product) {
-
-                listCart.push(product_data[0]);
-    
-                localStorage.setItem('product', JSON.stringify(listCart));
-                setProductsCart(listCart);
-            }
-
-            listCart.map( product => {
-
-                let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
-                console.log(iva_decimal);
-                subtotal += product.precio - (iva_decimal * product.precio);
-                total += product.precio;
-                iva += iva_decimal * product.precio;
-            });
-
-
-        }else{
-            localStorage.setItem('product', JSON.stringify([product_data[0]]));
-            setProductsCart([product_data[0]]);
-
-            let iva_decimal = parseInt(product_data[0].GrupoDeProductos.IVA1) / 100;
-
-            subtotal += product_data[0].precio - (iva_decimal * product_data[0].precio);
-            total += product_data[0].precio;
-            iva += iva_decimal * product_data[0].precio;
-
-        }
-
-        const alert = document.querySelector('.alert');
-        const progress = document.querySelector('.alert-progress');
-
-        alert.classList.add('active');
-        progress.classList.add('active');
-
-        setTimeout( () => {
-            alert.classList.remove('active');  
-            progress.classList.remove('active');         
-        }, 4000)
-
-        setTotal(total);
-        setSubtotal(subtotal);
-        setIva(iva);
+        addProductCart(e, id, URL_BASE, setProductsCart, setTotal, setSubtotal, setIva);
     } 
     
   return (
@@ -125,8 +65,21 @@ export const DetailProducts = ({productsCart, productDetail = null,  setProducts
 
                                 <div className="products__options detail-product">
                                 {/* <button className="btn btn-blue">Comprar</button> */}
-                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={ productsCart !== null && productsCart.find(item => item.ID === productDetail.ID) ? null : () => addProductCart(productDetail.ID)} >
-                                    {productsCart !== null && productsCart.find(item => item.ID === productDetail.ID) ? (<>En el carrito <i class="fa-solid fa-check"></i></>) : (<>Agregar al carrito <img src="./img/cart-product.png" alt="" /> </>) }
+                                    <div className="products__options-product detail-product" id={productDetail.ID} onClick={ productsCart !== null && productsCart.find(item => item.ID === productDetail.ID) ? null : (e) => addProduct(e,productDetail.ID)} >
+                                    {productsCart !== null && productsCart.find(item => item.ID === productDetail.ID) ? (
+                                    <>
+                                        En el carrito <i class="fa-solid fa-check"></i>
+                                    </>) : (
+                                    <>
+                                    <div className='load-add-cart display-none'>
+                                            <div className='loader'></div>
+                                        </div>
+                                    <div className='center-block'>
+                                        Agregar al carrito <img src="./img/cart-product.png" alt="" /> 
+                                    </div>
+                                    
+                                    </>
+                                    ) }
                                         
                                     </div>
                                 </div>
