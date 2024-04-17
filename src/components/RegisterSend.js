@@ -681,7 +681,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
                                 <select className="form-control" name='type_document' id='type_document'>
                                     <option>Tipo</option>
-                                    <option value="cc">CC</option>
+                                    <option value="cc" selected>CC</option>
                                     <option value="nit">NIT</option>
                                     <option value="ce">CE</option>
                                     <option value="pasaporte">PPT</option>
