@@ -19,7 +19,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
     const [idCliente, setIdCliente] = useState('');
     const [loadSuccess, setLoadSuccess] = useState(false);
 
-    const verifyUser = (e) => {
+    const verifyUser = async(e) => {
        
 
         e.preventDefault();
@@ -32,7 +32,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         let load = document.querySelector('.load-send');
         
 
-       console.log(tipo);
+     
 
         if ( id.length === 0 ) {
             errorMessage = 'Campo vacío, ingresa tu documento';
@@ -52,7 +52,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         setAlertSuccess(false);
     if (errorMessage.length === 0) {
         load.classList.add('show');
-        fetch(URL_CLIENTS + `?where=Documento%3D%3D%22${id}%22`)
+        await fetch(URL_CLIENTS + `?where=Documento%3D%3D%22${id}%22`)
         .then(response => response.json())
         .then(data => {
 
@@ -69,7 +69,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     });
                 }
 
-                console.log(dataUser);
+      
                 
                 if (exist) {
                     setAlertSuccess(true); 
@@ -151,33 +151,56 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         let type_document = document.querySelector('#type_document').value;
         let document_id = document.querySelector('#document_id').value;
 
+        let city_api = '';
+
         let verify = verifyInputs(data);
 
-        if (verify) {
-            console.log("Sin errores");
+        let city = citiesDep.filter( city => {
 
-            const data_json = {
-                Fecha: new Date(),
-                ID: parseInt(document_id),
-                amount: total,
-                E_Cormers: "1hr"
-            }
-    
-            const config_json = {
-                method: 'POST',
+            city_api = city.ID;
+
+           return city.Codigo_Municipio === data.ciudad.value;
+        });
+        let departament = departaments.filter( departament => departament.id === data.departamento.value);
+
+
+        
+        city.map( city => {
+            city_api = city.ID.toString();
+        })
+ 
+
+        if (verify) {
+
+            const client = {
+                Nombre: data.nombre.value,
+                Primer_Apellido: data.apellido.value,
+                Celular: data.telefono.value,
+                Correo: data.correo.value,
+                //Segundo_Apellido: data.Segundo_Apellido.value,
+                Departamento1: city_api,
+                Municipio: city_api,
+                location: {
+                    country2: "Colombia ",
+                    address_line_12: data.direccion.value,
+                    state_province2: city[0].Departamento,
+                    district_city2: city[0].Municipio,
+                    postal_Code2: "05001"
+        
+                }
+                
+            };
+
+         
+
+           let config_json = {
+                method: 'PATCH',
                 
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data_json)
-            };
-
-            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/Signature';
-            await fetch(URL_SIGNATURE, config_json)
-            .then(res => res.json())
-            .then(data_api => {
-                setFormWompi([data_api]);
-                console.log(data_api);
+                body: JSON.stringify(client)
+           }
 
                 const cont_success = document.querySelector('#detail-success');
                 const trama = document.querySelector('.trama');
@@ -193,6 +216,38 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     cont_success.classList.add('show');
                     
                 }, 300);
+
+            const URL_REGISTER_CLIENTS = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report/${idCliente}`;
+            const update_client = await fetch(URL_REGISTER_CLIENTS, config_json);
+            const update_data = await update_client.json();
+
+         
+
+
+            const data_json = {
+                Fecha: new Date(),
+                ID: parseInt(document_id),
+                amount: total,
+                E_Cormers: "1hr"
+            }
+    
+             config_json = {
+                method: 'POST',
+                
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data_json)
+            };
+
+            const URL_SIGNATURE = 'https://berry-connect.accsolutions.tech/api/Signature';
+            await fetch(URL_SIGNATURE, config_json)
+            .then(res => res.json())
+            .then(data_api => {
+                setFormWompi([data_api]);
+                console.log(data_api);
+
+                
             });
 
             /* const URL_SIGNATURE = 'https://6064-190-0-247-116.ngrok-free.app/api/v1/api/Signature';
@@ -201,7 +256,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
             setFormWompi([data_api]);
            console.log(data_api); */ 
 
-           console.log(formWompi);
+           //console.log(formWompi);
         }
 
        
@@ -232,7 +287,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         city.map( city => {
             city_api = city.ID.toString();
         })
-        console.log(city);
+     
 
         if (verify) {
             const newClient = {
@@ -277,14 +332,30 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 },
                 body: JSON.stringify(newClient)
             };
+
+            const cont_success = document.querySelector('#detail-success');
+            const trama = document.querySelector('.trama');
+            const cart = document.querySelector("#cart");
+            
     
-            fetch('https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes', config)
+            cart.classList.remove("open-cart");
+                    
+            trama.classList.add('open-trama');
+            cont_success.classList.add('open');
+            setTimeout( () => {
+                trama.classList.add('open-trama-styles');
+                cont_success.classList.add('show');
+                
+            }, 300);
+    
+            await fetch('https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes', config)
                 .then(response => response.json())
                 .then(data => {
                     console.log('Datos registrados correctamente:', data);
+                    setIdCliente(data.ID);
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Los datos no se registraron:', error.message);
                     //return error.text();
                 })/* .then(errorMessage => {
                     console.error('Detalles del error:', errorMessage)
@@ -312,20 +383,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 setFormWompi(data_api);
                 console.log(data_api);
 
-                const cont_success = document.querySelector('#detail-success');
-                const trama = document.querySelector('.trama');
-                const cart = document.querySelector("#cart");
                 
-        
-                cart.classList.remove("open-cart");
-                        
-                trama.classList.add('open-trama');
-                cont_success.classList.add('open');
-                setTimeout( () => {
-                    trama.classList.add('open-trama-styles');
-                    cont_success.classList.add('show');
-                    
-                }, 300);
             });
     
           
@@ -486,13 +544,14 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
             .then(data => {
     
                 let zona_id = '';
-                
-                let zona = data.filter( zona => {
+
+
+             let zona = Array.isArray(data) ? data.filter( zona => {
     
                     zona_id = zona.Zona;
     
                     return zona !== null;
-                }); /* parseInt(data[0].Zona.ID); */
+                }) : null;  /* parseInt(data[0].Zona.ID); */
     
                 
                 let products = [];
@@ -515,7 +574,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 const order_json = {
                     Fecha: dateNow(),
                     Clientes: idCliente,
-                    Zona: zona_id.ID.toString(),
+                    Zona: zona_id !== '' ? zona_id.ID.toString() : "",
                     Referencia: formWompi.reference,
                     Total: total,
                     Subtotal: subtotal,
