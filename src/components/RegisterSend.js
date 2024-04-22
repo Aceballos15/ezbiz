@@ -18,6 +18,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
     const [formWompi, setFormWompi] = useState();
     const [idCliente, setIdCliente] = useState('');
     const [loadSuccess, setLoadSuccess] = useState(false);
+    const [dataSend, setDataSend] = useState('');
 
     const verifyUser = async(e) => {
        
@@ -83,8 +84,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
                     let list_cities = [];
                     cities.map( city => {
-
-                        if (client_exists !== null && city.Departamento.includes(client_exists.Departamento1.Departamento)) {
+                        console.log()
+                        if (client_exists !== null && city.Codigo_Deapartamento === client_exists.Departamento1.Codigo_Deapartamento) {
             
                             list_cities.push(city);
             
@@ -172,57 +173,27 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
         if (verify) {
 
-            const client = {
-                Nombre: data.nombre.value,
-                Primer_Apellido: data.apellido.value,
-                Celular: data.telefono.value,
-                Correo: data.correo.value,
-                //Segundo_Apellido: data.Segundo_Apellido.value,
-                Departamento1: city_api,
-                Municipio: city_api,
-                location: {
-                    country2: "Colombia ",
-                    address_line_12: data.direccion.value,
-                    state_province2: city[0].Departamento,
-                    district_city2: city[0].Municipio,
-                    postal_Code2: "05001"
-        
-                }
+            const detailOrder = {
+                Direccion: data.direccion.value,  
                 
             };
 
-         
+            setDataSend(detailOrder);
 
-           let config_json = {
-                method: 'PATCH',
-                
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(client)
-           }
-
-                const cont_success = document.querySelector('#detail-success');
-                const trama = document.querySelector('.trama');
-                const cart = document.querySelector("#cart");
-                
-        
-                cart.classList.remove("open-cart");
-                        
-                trama.classList.add('open-trama');
-                cont_success.classList.add('open');
-                setTimeout( () => {
-                    trama.classList.add('open-trama-styles');
-                    cont_success.classList.add('show');
+            const cont_success = document.querySelector('#detail-success');
+            const trama = document.querySelector('.trama');
+            const cart = document.querySelector("#cart");
+            
+    
+            cart.classList.remove("open-cart");
                     
-                }, 300);
-
-            const URL_REGISTER_CLIENTS = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report/${idCliente}`;
-            const update_client = await fetch(URL_REGISTER_CLIENTS, config_json);
-            const update_data = await update_client.json();
-
-         
-
+            trama.classList.add('open-trama');
+            cont_success.classList.add('open');
+            setTimeout( () => {
+                trama.classList.add('open-trama-styles');
+                cont_success.classList.add('show');
+                
+            }, 300);
 
             const data_json = {
                 Fecha: new Date(),
@@ -231,7 +202,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 E_Cormers: "1hr"
             }
     
-             config_json = {
+             const config_json = {
                 method: 'POST',
                 
                 headers: {
@@ -318,12 +289,14 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 }
                 
             };
-            console.log(data.ciudad.value);
-            console.log(data.departamento.value);
-    
-            console.log(city[0].ID);
-    
-            console.log(newClient);
+
+            const detailOrder = {
+                Direccion: data.direccion.value,  
+                
+            };
+
+            setDataSend(detailOrder);
+
     
             const config = {
                 method: 'POST',
@@ -533,9 +506,11 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
     }
 
+   
+
     useEffect( () => {
         
-
+        //Enviar pedido a la base de datos
         if ( formWompi && formWompi.length !== 0) {
        
             const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
@@ -575,6 +550,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     Fecha: dateNow(),
                     Clientes: idCliente,
                     Zona: zona_id !== '' ? zona_id.ID.toString() : "",
+                    Direccion: dataSend.Direccion,
                     Referencia: formWompi.reference,
                     Total: total,
                     Subtotal: subtotal,
@@ -728,21 +704,22 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 <form onSubmit={dataUser !== null ? orders : registerClient}>
                     <div className='block-form'> 
                         <div>
-                            <input type='text' className='form-control' placeholder='Nombre *' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} />
+                            <input type='text' className='form-control' placeholder='Nombre *' name='nombre' defaultValue={dataUser !== null ? dataUser.Nombre : ''} disabled={enableRegister ? false : true}/>
                             { errors && errors.name ? ( <span className='text-error'> { errors.name } </span> ) : ''}
+                            
                         </div>
                         <div>
-                            <input type='text' className='form-control' placeholder='Apellido *' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} />
+                            <input type='text' className='form-control' placeholder='Apellido *' name='apellido' defaultValue={dataUser !== null ? dataUser.Primer_Apellido + ' ' + dataUser.Segundo_Apellido : ""} disabled={enableRegister ? false : true}/>
                             { errors && errors.last_name ? ( <span className='text-error'> { errors.last_name } </span> ) : ''}
                         </div>
                     </div>  
                     <div>
-                        <input type='text' className='form-control' placeholder='Correo Electrónico *' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} />
+                        <input type='text' className='form-control' placeholder='Correo Electrónico *' name='correo' defaultValue={dataUser !== null ? dataUser.Correo : ''} disabled={enableRegister ? false : true}/>
                         { errors && errors.email ? ( <span className='text-error'> { errors.email } </span> ) : ''}
 
                     </div>
                     <div>
-                        <input type='text' className='form-control' placeholder='Teléfono *' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} />
+                        <input type='text' className='form-control' placeholder='Teléfono *' name='telefono' defaultValue={dataUser !== null ? dataUser.Celular : ''} disabled={enableRegister ? false : true}/>
                         { errors && errors.phone ? ( <span className='text-error'> { errors.phone } </span> ) : ''}
 
                     </div>
@@ -750,12 +727,12 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     <div className='block-form'>
                         <div>
 
-                            <select className='form-control' name='departamento' onChange={getCities}>
+                            <select className='form-control' name='departamento' onChange={getCities} disabled={enableRegister ? false : true}>
                                 <option value=''>Departamento *</option>
                                 { departaments && departaments.length !== 0 && (
                                     departaments.map( departament => {
                                         return(
-                                            <option value={departament.id} selected={dataUser !== null && dataUser.Departamento1.Departamento === departament.nombre ? 'selected' : '' }>{departament.nombre}</option>
+                                            <option value={departament.id} selected={dataUser !== null && dataUser.Departamento1.Codigo_Deapartamento === departament.id ? 'selected' : '' }>{departament.nombre}</option>
                                         )
                                     } )
                                 )}
@@ -765,12 +742,12 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                         </div>
                         
                         <div>
-                            <select className='form-control' name='ciudad'>
+                            <select className='form-control' name='ciudad' disabled={enableRegister ? false : true}>
                                 <option value=''>Ciudad *</option>
                                 { citiesDep && citiesDep.length !== 0 && (
                                     citiesDep.map( city => {
                                         return(
-                                            <option value={city.Codigo_Municipio} selected={dataUser !== null && dataUser.Municipio.Municipio === city.Municipio ? 'selected' : '' }  >{city.Municipio}</option>
+                                            <option value={city.Codigo_Municipio} selected={dataUser !== null && dataUser.Municipio.Codigo_Municipio === city.Codigo_Municipio ? 'selected' : '' }  >{city.Municipio}</option>
                                         )
                                     } )
                                 )}
