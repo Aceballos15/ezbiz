@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -73,3 +74,7 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/t
 # 1Hora
 Desarrollo de ecommerce para 1Hora
 >>>>>>> 9e5fa10b936c3a6fc59645371cf008eb62228d70
+=======
+# Ezviz
+Desarrollo de aplicativo web de Ezviz
+>>>>>>> 254f4c4b6eb4798eaaa3da2e83289469f2e1a2c6

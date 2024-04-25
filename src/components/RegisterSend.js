@@ -793,7 +793,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         <div className='detail' id='detail-success'>
 
             <div className="cart__header-img">
-                <img src="./img/Logo_1Hora 1 blanco.png" alt=""/>
+                <img src="./img/Ezviz-Logo.svg" alt=""/>
             </div>
 
             <div className="cart__close-cart" id="close-cart" onClick={closeSuccessDetail}>

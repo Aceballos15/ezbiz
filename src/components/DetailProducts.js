@@ -34,7 +34,7 @@ export const DetailProducts = ({productsCart, productDetail = null,  setProducts
         <div className='detail' id='detail-product'>
 
             <div className="cart__header-img">
-                <img src="./img/Logo_1Hora 1 blanco.png" alt=""/>
+                <img src="./img/EZVIZ-Logo.svg" alt=""/>
             </div>
 
             <div className="cart__close-cart" id="close-cart" onClick={closeProductDetail}>
@@ -75,7 +75,7 @@ export const DetailProducts = ({productsCart, productDetail = null,  setProducts
                                             <div className='loader'></div>
                                         </div>
                                     <div className='center-block'>
-                                        Agregar al carrito <img src="./img/cart-product.png" alt="" /> 
+                                        Agregar al carrito <img src="./img/AddCart-icon.svg" alt="" /> 
                                     </div>
                                     
                                     </>

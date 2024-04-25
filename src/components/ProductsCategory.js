@@ -116,7 +116,7 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
                                          <div className='load-add-cart display-none'>
                                             <div className='loader'></div>
                                         </div>
-                                        <img src="./img/cart-product.png" alt="" />
+                                        <img src="./img/AddCart-icon.svg" alt="" />
                                         </>
                                     
                                     ) }    

@@ -76,7 +76,7 @@ return (
                     <div className="header__container container">
                         <div className="header__logo">
                             <a href="/">
-                                <img src="./img/Logo_1Hora 1.png" alt="" />
+                                <img src="./img/EZVIZ-Logo.svg" alt="" />
                             </a>
                         </div>
                         <nav className="header__nav">

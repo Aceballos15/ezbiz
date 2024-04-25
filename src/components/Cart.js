@@ -221,7 +221,7 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         <div className="cart" id="cart">
 
             <div className="cart__header-img">
-                <img src="./img/Logo_1Hora 1 blanco.png" alt=""/>
+                <img src="./img/EZVIZ-Logo.svg" alt=""/>
             </div>
 
             <div className="cart__close-cart" id="close-cart" onClick={closeCart}>

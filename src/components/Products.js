@@ -24,13 +24,13 @@ export const Products = ({groupProducts, setCurrentPage}) => {
                         <div className="owl-carousel owl-theme">
                             <div className="item">
                                 <div className="banner__img">
-                                    <img src="./img/Banner-1Hora-img1.png" alt=""/>
+                                    <img src="./img/Banner-Ezviz-Header-Img1.png" alt=""/>
                                 </div>
                                 
                             </div>
                             <div className="item">
                                 <div className="banner__img">
-                                    <img src="./img/Frame2.png" alt=""/>
+                                    <img src="./img/Banner-Ezviz-Header-Img2.jpg" alt=""/>
                                 </div>
                             </div>
                         </div>
