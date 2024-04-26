@@ -8,6 +8,16 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
     let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
 
     
+    setTimeout(() => {
+        const cont_products = document.querySelectorAll('.col-products');
+        const load = document.querySelector('.load-products');
+
+        cont_products.forEach( cont => {
+            cont.classList.remove('products-hide');
+            load.classList.add('hide');
+        });
+    }, 2000);
+
      
     const total_products = products.length;
     const [productsForPage, setProductsForPage] = useState(12);
@@ -73,12 +83,16 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
    // const page 
 
   return (
-    <>
+    <>  
+        <div className='load load-products'> 
+            <div className='loader'></div>
+        </div> 
+
         {products && products.length !== 0 &&(
             
             products.map( product => {
                 return(
-                    <div className="col col-33 col-mb-50" key={product.id}>
+                    <div className="col col-33 col-mb-50 col-products" key={product.id}>
                         <article className="products__card-product">
                             <div className="products__card-img">
                                 <img src={product.Imagen_publica.url} alt=""/>
@@ -129,7 +143,7 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
             }).slice(firstIndex, lastIndex)
         )}
 
-        <div className='col col-100'>
+        <div className='col col-100 col-products'>
             <nav aria-label="pagination-products">
                 <ul className="pagination">
                     <li className="page-item">

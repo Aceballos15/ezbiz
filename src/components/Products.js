@@ -13,6 +13,15 @@ export const Products = ({groupProducts, setCurrentPage}) => {
 
     const resetCurrentPage = () => {
         setCurrentPage(1);
+        const cont_products = document.querySelectorAll('.col-products');
+        const load = document.querySelector('.load-products');
+
+        cont_products.forEach( cont => {
+            cont.classList.add('products-hide');
+            load.classList.remove('hide');
+        });
+
+
     }
     
   return (
@@ -64,7 +73,7 @@ export const Products = ({groupProducts, setCurrentPage}) => {
                             </div>
                         </div>
                         <div className="col col-75 col-mb-100">
-                            <div className="row">
+                            <div className="row position-relative">
                                 
                                 <Outlet />
                                 

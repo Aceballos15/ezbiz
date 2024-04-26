@@ -383,6 +383,19 @@ img {
     opacity: 0;
 }
 
+.load.load-products {
+    opacity: 1;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+  
+}
+
+.load-products.hide {
+    display: none;
+}
+
 
 .loader {
     width: 1.5rem;
@@ -499,6 +512,10 @@ img {
 
 .products {
 
+}
+
+.products-hide {
+    display: none;
 }
 
 .products__category {
