@@ -175,7 +175,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
             const detailOrder = {
                 Direccion: data.direccion.value,  
-                
+                Ciudad: city_api
             };
 
             setDataSend(detailOrder);
@@ -292,7 +292,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
             const detailOrder = {
                 Direccion: data.direccion.value,  
-                
+                Ciudad: city_api
             };
 
             setDataSend(detailOrder);
@@ -548,6 +548,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 console.log(zona_id);
                 const order_json = {
                     Fecha: dateNow(),
+                    Aplicativo: "ezviz",
                     Clientes: idCliente,
                     Zona: zona_id !== '' ? zona_id.ID.toString() : "",
                     Direccion: dataSend.Direccion,
