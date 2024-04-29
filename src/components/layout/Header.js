@@ -35,7 +35,7 @@ const searchProducts = (e) => {
             listProducts.map( product => {
                 
                 let product_reference = product.Referencia.toLowerCase();
-                let product_characteristics = product.Caracteristicas.toLowerCase();
+                let product_characteristics = product.Caracteristicas ? product.Caracteristicas.toLowerCase() : '';
                 let product_category = product.GrupoDeProductos.Description.toLowerCase();
                 
                 if (product_reference.includes(search_product) || product_characteristics.includes(search_product) || product_category.includes(search_product)) {
@@ -56,7 +56,7 @@ useEffect( () => {
 
     const getProductsAPI = async() => {
 
-        const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
+        const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22";
         const products_api = await fetch(URL_BASE);
         const products_data = await products_api.json();
         

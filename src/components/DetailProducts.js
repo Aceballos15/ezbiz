@@ -4,7 +4,7 @@ import { addProductCart } from '../helpers/addProductsCart.js';
 
 export const DetailProducts = ({productsCart, productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
 
-    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22";
+    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22";
     
 
     const closeProductDetail = () => {
@@ -53,7 +53,7 @@ export const DetailProducts = ({productsCart, productDetail = null,  setProducts
                             <div className="products__card-description">
                                 <span className="products__type">{productDetail && productDetail.GrupoDeProductos.Description}</span>
                                 <h3 className="products__title">{productDetail && productDetail.Referencia}</h3>
-                                <p className='products__description' dangerouslySetInnerHTML={productDetail ? {__html: productDetail.Caracteristicas.replace(/-/g, `<li/>` )}: {__html: ""} }></p>
+                                <p className='products__description' dangerouslySetInnerHTML={productDetail && productDetail.Caracteristicas ? {__html: productDetail.Caracteristicas.replace(/-/g, `<li/>` )}: {__html: ""} }></p>
                                 <div className="products__cont-price-cart">
                                     <div className="products__cont-price">
                                         {/* Cambiar para mas adelante el precio del producto */}

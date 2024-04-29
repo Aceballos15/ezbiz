@@ -5,10 +5,10 @@ import { addProductCart } from '../helpers/addProductsCart.js';
 
 export const ProductsCategory = ({category = '', productsCart, setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     
-    let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?where=Marca.Marca%3D%221hora%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_1_hora?max=10&where=Marca.Marca%3D%221hora%22";
+    let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?max=10&where=Marca.Marca%3D%22ezviz%22";
 
     
-    setTimeout(() => {
+    /* setTimeout(() => {
         const cont_products = document.querySelectorAll('.col-products');
         const load = document.querySelector('.load-products');
 
@@ -16,7 +16,7 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
             cont.classList.remove('products-hide');
             load.classList.add('hide');
         });
-    }, 2000);
+    }, 2000); */
 
      
     const total_products = products.length;
@@ -84,9 +84,9 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
 
   return (
     <>  
-        <div className='load load-products'> 
+        {/* <div className='load load-products'> 
             <div className='loader'></div>
-        </div> 
+        </div>  */}
 
         {products && products.length !== 0 &&(
             
