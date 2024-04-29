@@ -548,7 +548,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 console.log(zona_id);
                 const order_json = {
                     Fecha: dateNow(),
-                    Aplicativo: "ezviz",
+                    Aplicativo: "Ezviz",
                     Clientes: idCliente,
                     Zona: zona_id !== '' ? zona_id.ID.toString() : "",
                     Direccion: dataSend.Direccion,
