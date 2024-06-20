@@ -55,7 +55,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         load.classList.add('show');
         await fetch(URL_CLIENTS + `?where=Documento%3D%3D%22${id}%22`)
         .then(response => response.json())
-        .then(data => {
+        .then(({data}) => {
 
                 let client_exists = '';
                 
@@ -69,8 +69,6 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                         }   
                     });
                 }
-
-      
                 
                 if (exist) {
                     setAlertSuccess(true); 
@@ -535,28 +533,32 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     let object = {
                             
                         Productos: product.ID,
-                        Precio_Unitario: product.precio,
+                        Precio: product.precio,
                         Cantidad: product.quantity.length !== 0 ? product.quantity : 1,
                         IVA: product.precio * (parseInt(product.GrupoDeProductos.IVA1) /  100),
-                        Orden_Id: "0"
+                        Orden_Id: "0",
+                        Estado: "Activo",
+                        Estado_traslado: "Activo"
                     };
     
                     products.push(object);
                 });           
     
                 
-                console.log(zona_id);
+                //console.log(zona_id);
                 const order_json = {
                     Fecha: dateNow(),
                     Aplicativo: "Ezviz",
                     Clientes: idCliente,
                     Zona: zona_id !== '' ? zona_id.ID.toString() : "",
                     Direccion: dataSend.Direccion,
+                    Ciudad: dataSend.Ciudad,
                     Referencia: formWompi.reference,
                     Total: total,
                     Subtotal: subtotal,
                     Iva_Total: iva,
                     Estado: "Pendiente",
+                    Estado_traslado: "Pendiente",
                     Estado_De_Pago: "Pending",
                     Items: products,
                     Fecha_de_pago: dateNow()
