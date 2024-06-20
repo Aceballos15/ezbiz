@@ -3,8 +3,8 @@ import { formatNumber } from '../helpers/formatNumbers.js';
 
 export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCart, setAlertSuccess, setBlockOptions}) => {
 
-    const URL_CLIENTS = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes_Report";
-    const URL_CITIES = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Municipio1";
+    const URL_CLIENTS = "https://zoho.accsolutions.tech/API/v1/Clientes_Report";
+    const URL_CITIES = "https://zoho.accsolutions.tech/API/v1/Municipio1";
 
     //const [clients, setClients] = useState([]);
 
@@ -321,9 +321,9 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 
             }, 300);
     
-            await fetch('https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Clientes', config)
+            await fetch('https://zoho.accsolutions.tech/API/v1/Clientes', config)
                 .then(response => response.json())
-                .then(data => {
+                .then(({data}) => {
                     console.log('Datos registrados correctamente:', data);
                     setIdCliente(data.ID);
                 })
@@ -513,10 +513,10 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         //Enviar pedido a la base de datos
         if ( formWompi && formWompi.length !== 0) {
        
-            const URL_REMISION = `https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Remision_Report?where=Cliente%3D%3D${idCliente}`;
+            const URL_REMISION = `https://zoho.accsolutions.tech/API/v1/Remision_Report?where=Cliente%3D%3D${idCliente}`;
             fetch(URL_REMISION)
             .then(res => res.json())
-            .then(data => {
+            .then(({data}) => {
     
                 let zona_id = '';
 
@@ -572,11 +572,11 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     body: JSON.stringify(order_json)
                 };
     
-                const URl_ORDERS = 'https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Ordenes_1hora_Admin';
+                const URl_ORDERS = 'https://zoho.accsolutions.tech/API/v1/Ordenes_1hora_Admin';
                     
                 fetch(URl_ORDERS, config_json_order)
                 .then(response => response.json())
-                .then(data => {
+                .then(({data}) => {
                     console.log(data);
     
                     setLoadSuccess(true);
@@ -602,12 +602,12 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
         const getDepartaments= async() => {
             const cities_api = await fetch(URL_CITIES);
 
-            const cities_data = await cities_api.json();
-            setCities(cities_data);
+            const {data} = await cities_api.json();
+            setCities(data);
 
             let list_departaments = [];
           
-            cities_data.map(city => {
+            data.map(city => {
 
                 /* let object = {
                     id: city.Codigo_Deapartamento,

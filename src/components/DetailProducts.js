@@ -4,7 +4,7 @@ import { addProductCart } from '../helpers/addProductsCart.js';
 
 export const DetailProducts = ({productsCart, productDetail = null,  setProductsCart, setSubtotal, setTotal, setIva}) => {
 
-    const URL_BASE = "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22";
+    const URL_BASE = "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=";
     
 
     const closeProductDetail = () => {

@@ -5,8 +5,8 @@ import { addProductCart } from '../helpers/addProductsCart.js';
 
 export const ProductsCategory = ({category = '', productsCart, setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     
-    let URL_BASE = category !== '' ? "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://nexyapp-f3a65a020e2a.herokuapp.com/zoho/v1/console/Productos_Ezviz?max=10&where=Marca.Marca%3D%22ezviz%22";
-
+    let URL_BASE = category !== '' ? "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?max=10&where=Marca.Marca%3D%22ezviz%22";
+    let URL_BASE_API = 'https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=';
     
     /* setTimeout(() => {
         const cont_products = document.querySelectorAll('.col-products');
@@ -47,7 +47,7 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
   //Agregar productos al carrito
     const addProduct = async(e,id) => {
 
-        addProductCart(e, id, URL_BASE, setProductsCart, setTotal, setSubtotal, setIva);
+        addProductCart(e, id, URL_BASE_API, setProductsCart, setTotal, setSubtotal, setIva);
     }
 
     const openProductDetail = (product) => {
