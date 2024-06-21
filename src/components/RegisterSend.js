@@ -647,7 +647,7 @@ export const RegisterSend = ({discountPurchase, setDiscountPurchase, totalDiscou
                     
                 fetch(URl_ORDERS, config_json_order)
                 .then(response => response.json())
-                .then(({data}) => {
+                .then((data) => {
                     console.log(data);
     
                     setLoadSuccess(true);
