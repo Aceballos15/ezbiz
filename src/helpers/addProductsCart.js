@@ -1,9 +1,17 @@
-export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, setSubtotal, setIva) => {
+import { addDiscountPurchase } from "./addDiscountPurchase.js";
+
+export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, setSubtotal, setIva, discountPurchase, setTotalDiscount) => {
 
     //Mostrar cargando y ocultar el icono del carrito
     const item_add_product = e.target.id.length !== 0 ? e.target : e.target.parentNode;
-    item_add_product.children[0].classList.remove('display-none');
-    item_add_product.children[1].classList.add('display-none');
+    
+    try {
+        item_add_product.children[0].classList.remove('display-none');
+        item_add_product.children[1].classList.add('display-none');
+        
+    } catch (error) {
+        console.log(`Error con unas de la propiedades de carga de los iconos en el boton de agregar un producto - Error: ${error.message}`);
+    }
 
     //Llamado de la API por su ID
     let URL_API = URL_BASE + 'ID%3D' + id;
@@ -15,7 +23,7 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
     let iva = 0;
     
 //Lista de productos en carrito en el localstorage
-    let listCart = JSON.parse(localStorage.getItem('product'));
+    let listCart = JSON.parse(localStorage.getItem('product_ezviz_asy'));
 
     data[0].quantity = 1;
     data[0].precio = parseInt(data[0].Precio_Mayorista);
@@ -30,7 +38,7 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
 
             listCart.push(data[0]);
 
-            localStorage.setItem('product', JSON.stringify(listCart));
+            localStorage.setItem('product_ezviz_asy', JSON.stringify(listCart));
             setProductsCart(listCart);
         }
 
@@ -45,7 +53,7 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
 
 
     }else{
-        localStorage.setItem('product', JSON.stringify([data[0]]));
+        localStorage.setItem('product_ezviz_asy', JSON.stringify([data[0]]));
         setProductsCart([data[0]]);
 
         let iva_decimal = parseInt(data[0].GrupoDeProductos.IVA1) / 100;
@@ -70,4 +78,6 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
     setTotal(total);
     setSubtotal(subtotal);
     setIva(iva);
+
+    addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
 } 

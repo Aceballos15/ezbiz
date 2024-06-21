@@ -14,15 +14,6 @@ export const Products = ({groupProducts, setCurrentPage}) => {
     const resetCurrentPage = () => {
         setCurrentPage(1);
 
-        /* const cont_products = document.querySelectorAll('.col-products');
-        const load = document.querySelector('.load-products');
-
-        cont_products.forEach( cont => {
-            cont.classList.add('products-hide');
-            load.classList.remove('hide');
-        }); */
-
-
     }
     
   return (

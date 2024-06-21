@@ -139,7 +139,8 @@ img {
    
 }
 
-.btn-blue:hover {
+.btn-blue:hover,
+.btn-coupon:hover {
     background-color: var(--light-green);
 }
 
@@ -166,6 +167,14 @@ img {
     background-color: var(--light-green);
     color: var(--white);
 }
+
+.btn-coupon {
+    background-color: var(--dark-green);
+    color: #ffff;
+    padding: 0.5rem;
+    margin-left: 0.5rem;
+}
+
 
 .section {
     padding-bottom: 3rem;
@@ -452,6 +461,7 @@ img {
 
 .header__nav input {
     padding: 1rem;
+    padding-left: 4rem;
     font-size: 1.1rem;
     border: none;
     outline: none;
@@ -465,12 +475,13 @@ img {
     background-color: #d4d4d4;
     padding: 0.5rem;
     border-radius: 100%;
-    margin-left: -3.2rem;
+    margin-right: -3.2rem;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0px 3px 6px #555;
-    
+    position: relative;
+    z-index: 1;
 }
 
 .header__cart {
@@ -955,6 +966,23 @@ img {
     
 }
 
+.cart__cont-desc {
+   
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.cart__cont-desc form {
+    display: flex;
+    justify-content: center;
+    padding-top: 0.5rem;
+}
+
+.cart__cont-desc .form-control {
+    width: auto;
+    
+}
+
 .cart__cont-next {
     display: flex;
     align-items: center;
@@ -1067,10 +1095,11 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 2.2rem 0;
 }
 
 .footer__img-logo img {
-    width: 16rem;
+    width: 14rem;
     padding: 0 2rem;
 }
 
@@ -1151,6 +1180,20 @@ img {
 .page-link.disabled {
     
 }
+
+.text-coupon {
+    font-size: 0.8rem;
+}
+
+.icon-remove-coupon {
+    border: 1px solid #333;
+    display: inline-block;
+    padding: 0.05rem 0.3rem;
+    margin-top: 0.5rem;
+    cursor: pointer;
+    margin-left: 0.5rem;
+}
+
 
 /* ============ Responsive =========== */
 
@@ -1308,5 +1351,38 @@ img {
 
     .container.cart__container {
         padding-bottom: 13.5rem;
+    }
+
+    .products__card-description {
+        padding: 0.5rem;
+    }
+
+    .products__options {
+        position: relative;
+        bottom: 0;
+        padding-bottom: 0.5rem;
+    }
+
+
+    .products__card-product .products__options {
+        opacity: 1;
+        transition: all 0.4s ease;
+    }
+
+    .products__type {
+        font-size: 0.8rem;
+    }
+
+    .products__title {
+        font-size: 1rem;
+    }
+
+    .products__cont-price {
+        padding: 0;
+        padding-top: 0.5rem;
+    }
+
+    .products__price {
+        font-size: 1rem;
     }
 }

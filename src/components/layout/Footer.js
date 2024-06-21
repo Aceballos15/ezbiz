@@ -15,7 +15,7 @@ export const Footer = () => {
         </div>
         <div className="footer__logos">
             <div className="footer__img-logo">
-                <img src="./img/Logo-chacam.svg" alt="" />
+                <img src="./img/Logo-asinfy.svg" alt="" />
             </div>
 
             <div className="footer__img-logo">
@@ -23,7 +23,7 @@ export const Footer = () => {
             </div>
         </div>
         <div className="footer__text">
-            <span>&copy; 2024 CHACAM TRADING</span>
+            <span>Copyright &copy; {new Date().getFullYear()} Tecnosuper - Ezviz. Desarrollado por <b>Asinfy</b>.</span>
         </div>
     </footer>
     <div className='load load-display'> 

@@ -3,21 +3,10 @@ import { formatNumber } from '../helpers/formatNumbers.js';
 import { Products } from './Products.js';
 import { addProductCart } from '../helpers/addProductsCart.js';
 
-export const ProductsCategory = ({category = '', productsCart, setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
+export const ProductsCategory = ({discountPurchase, setTotalDiscount, category = '', productsCart, setProductsCart, setSubtotal, setTotal, products, setProducts, setIva, currentPage, setCurrentPage, setProductDetail}) => {
     
     let URL_BASE = category !== '' ? "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22%26%26Tipo.Nombre%3D%22" + category + "%22" : "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?max=10&where=Marca.Marca%3D%22ezviz%22";
-    let URL_BASE_API = 'https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=';
-    
-    /* setTimeout(() => {
-        const cont_products = document.querySelectorAll('.col-products');
-        const load = document.querySelector('.load-products');
-
-        cont_products.forEach( cont => {
-            cont.classList.remove('products-hide');
-            load.classList.add('hide');
-        });
-    }, 2000); */
-
+    let URL_BASE_API = 'https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=';    
      
     const total_products = products.length;
     const [productsForPage, setProductsForPage] = useState(12);
@@ -47,7 +36,7 @@ export const ProductsCategory = ({category = '', productsCart, setProductsCart, 
   //Agregar productos al carrito
     const addProduct = async(e,id) => {
 
-        addProductCart(e, id, URL_BASE_API, setProductsCart, setTotal, setSubtotal, setIva);
+        addProductCart(e, id, URL_BASE_API, setProductsCart, setTotal, setSubtotal, setIva, discountPurchase, setTotalDiscount);
     }
 
     const openProductDetail = (product) => {

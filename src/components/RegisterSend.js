@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js';
 
-export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCart, setAlertSuccess, setBlockOptions}) => {
+export const RegisterSend = ({discountPurchase, setDiscountPurchase, totalDiscount, setTotalDiscount, iva, total, setTotal, subtotal, productsCart, setProductsCart, setAlertSuccess, setBlockOptions}) => {
 
     const URL_CLIENTS = "https://zoho.accsolutions.tech/API/v1/Clientes_Report";
     const URL_CITIES = "https://zoho.accsolutions.tech/API/v1/Municipio1";
@@ -19,6 +19,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
     const [idCliente, setIdCliente] = useState('');
     const [loadSuccess, setLoadSuccess] = useState(false);
     const [dataSend, setDataSend] = useState('');
+    const [dataInfo, setDataInfo] = useState('');
+    const [dataInfoJSON, setDataInfoJSON] = useState('');
 
     const verifyUser = async(e) => {
        
@@ -176,6 +178,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 Ciudad: city_api
             };
 
+            setDataInfo(`ID cliente: ${idCliente}`);
+
             setDataSend(detailOrder);
 
             const cont_success = document.querySelector('#detail-success');
@@ -287,6 +291,9 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 }
                 
             };
+
+            setDataInfo(`N Documento: ${document_id} - Nombre: ${data.nombre.value} ${data.apellido.value}`);
+            setDataInfoJSON(JSON.stringify(newClient));
 
             const detailOrder = {
                 Direccion: data.direccion.value,  
@@ -504,6 +511,65 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
 
     }
 
+    const validateCoupon = async(e) => {
+
+        e.preventDefault();
+
+        let coupon_value = e.target.coupon.value;
+        let errors = {};
+
+        //Validaciones del campo
+        if (coupon_value.length === 0) {
+            errors.coupon = "El campo esta vacío";
+        } 
+
+        //API cupon
+        const URL = 'https://zoho.accsolutions.tech/API/v1/Cupones_descuentos_1hora_Report?where%20=Estado%3D%3D%22Activo%22'; 
+        const coupon_API = await fetch(URL);
+        const {data} = await coupon_API.json();
+
+        let coupon = '';
+
+        //Validar que si esté el cupón en el sistema
+        if (data !== null) {
+            coupon = data.filter( coupon => coupon.Codigo_Descuento === coupon_value && coupon.Estado === "Activo" );
+        }else{
+            errors.coupon = "No hay cupones disponibles";
+        }
+
+        if (coupon !== null && coupon.length !== 0) {
+            
+            setDiscountPurchase(coupon[0]);
+
+            //Se utilizar la funcion por cambio no instantaneo
+            if (coupon[0] !== null) {
+                let discount_percentage = parseInt(coupon[0].Porcentaje) / 100;
+                let new_total = total - (total * discount_percentage);
+                let discount_total = total * discount_percentage;
+        
+                setTotal(new_total);
+                setTotalDiscount(discount_total);    
+           }
+        
+            console.log("Console");
+        }else{
+            errors.coupon = "Cupón no disponible";
+        }
+
+
+        setErrors(errors);
+
+    }
+
+    const removeCoupon = () => {
+       
+
+        setTotal( total + totalDiscount );
+
+        setTotalDiscount(null);
+        setDiscountPurchase(null);
+    }
+
    
 
     useEffect( () => {
@@ -554,6 +620,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     Direccion: dataSend.Direccion,
                     Ciudad: dataSend.Ciudad,
                     Referencia: formWompi.reference,
+                    Cupon_descuento: discountPurchase !== null ? discountPurchase.ID : '',
                     Total: total,
                     Subtotal: subtotal,
                     Iva_Total: iva,
@@ -561,6 +628,8 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     Estado_traslado: "Pendiente",
                     Estado_De_Pago: "Pending",
                     Items: products,
+                    Info: dataInfo,
+                    Info_JSON: dataInfoJSON,
                     Fecha_de_pago: dateNow()
                 } 
     
@@ -582,14 +651,15 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     console.log(data);
     
                     setLoadSuccess(true);
-                    localStorage.removeItem('product');
+                    localStorage.removeItem('product_ezviz_asy');
     
                     setTimeout( () => {
                         window.location.reload();
                     },3000);
                 });
     
-    
+
+              
             });
     
                 
@@ -646,6 +716,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 <div className="cart__cont-total">
                 <p>IVA: <span className="text-bold"> {formatNumber(iva, true)} </span></p> 
                     <p>Subtotal: <span className="text-bold"> {formatNumber(subtotal, true)} </span></p> 
+                    <p>Descuento: <span className="text-bold" id='element-discount'> {totalDiscount && `-${formatNumber(totalDiscount, true)}`} </span></p>  
                     {/* <p>Costo de envío: <span className="text-bold"> $20.000 </span></p> */}
                     <p className="cart__total">Total:  <span>{formatNumber(total, true)} </span></p>
                 </div>
@@ -653,6 +724,17 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                 
                 {productsCart && productsCart.length !== 0 && (
                     <>
+                    <div className='cart__cont-desc'>
+                        <p>Cupón de descuento </p>
+                        <form onSubmit={validateCoupon}>
+                            <input name='coupon' placeholder='Ingresa tú cupón' className='form-control' />
+                            <input type='submit' value='Validar' className='btn btn-coupon' disabled={totalDiscount === null ? false : true} /> 
+                        </form>
+                        { errors && errors.coupon ? ( <span className='text-error'> { errors.coupon } </span> ) : '' }
+
+                        { discountPurchase !== null ? ( <p className='text-coupon'> {discountPurchase.Codigo_Descuento} - {parseInt(discountPurchase.Porcentaje)}% <span className='icon-remove-coupon' onClick={removeCoupon}> X </span> </p> ) : "" }
+                    </div>
+
                     <div className="cart__data-user">
                         <p>Ingresa los siguientes datos para continuar</p>
                         <form onSubmit={verifyUser}>
@@ -730,7 +812,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                     <div className='block-form'>
                         <div>
 
-                            <select className='form-control' name='departamento' onChange={getCities} disabled={enableRegister ? false : true}>
+                            <select className='form-control' name='departamento' onChange={getCities}>
                                 <option value=''>Departamento *</option>
                                 { departaments && departaments.length !== 0 && (
                                     departaments.map( departament => {
@@ -745,7 +827,7 @@ export const RegisterSend = ({iva, total, subtotal, productsCart, setProductsCar
                         </div>
                         
                         <div>
-                            <select className='form-control' name='ciudad' disabled={enableRegister ? false : true}>
+                            <select className='form-control' name='ciudad'>
                                 <option value=''>Ciudad *</option>
                                 { citiesDep && citiesDep.length !== 0 && (
                                     citiesDep.map( city => {

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import { formatNumber } from '../helpers/formatNumbers.js';
 import { RegisterSend } from './RegisterSend.js';
+import { addDiscountPurchase } from '../helpers/addDiscountPurchase.js';
 
-export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, setSubtotal, total, setTotal}) => {
+export const Cart = ({ discountPurchase, setDiscountPurchase, setTotalDiscount, totalDiscount, productsCart, setProductsCart, iva, setIva, subtotal, setSubtotal, total, setTotal}) => {
     // const [listCart, setListCart] = useState([]);
 
     
@@ -25,7 +26,7 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
     }
 
     const getListCart = () => {
-        let products_cart = JSON.parse(localStorage.getItem("product"));
+        let products_cart = JSON.parse(localStorage.getItem("product_ezviz_asy"));
 
         setProductsCart(products_cart);
 
@@ -40,7 +41,7 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         let iva = 0;
 
         setProductsCart(new_products_cart);
-        localStorage.setItem('product', JSON.stringify(new_products_cart));
+        localStorage.setItem('product_ezviz_asy', JSON.stringify(new_products_cart));
 
         new_products_cart.map(product => {
             let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
@@ -55,6 +56,8 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         setTotal(total);
         setSubtotal(subtotal);
         setIva(iva);
+
+        addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
            
     }
 
@@ -91,9 +94,9 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
        setTotal(total);
        setIva(iva);
         setProductsCart(new_products_cart);
-        localStorage.setItem('product', JSON.stringify(new_products_cart));
+        localStorage.setItem('product_ezviz_asy', JSON.stringify(new_products_cart));
        
-
+        addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
     }
 
     const reduceQuantity = (e,id) => {
@@ -122,7 +125,9 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         setTotal(total);
         setIva(iva);
         setProductsCart(new_products_cart);
-        localStorage.setItem('product', JSON.stringify(new_products_cart));
+        localStorage.setItem('product_ezviz_asy', JSON.stringify(new_products_cart));
+
+        addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
     }
 
     const modifyQuantity = (e, id) => {
@@ -166,7 +171,9 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
        setTotal(total);
        setIva(iva);
         setProductsCart(new_products_cart);
-        localStorage.setItem('product', JSON.stringify(new_products_cart));
+        localStorage.setItem('product_ezviz_asy', JSON.stringify(new_products_cart));
+
+        addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
 
     }
 
@@ -199,7 +206,7 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         let subtotal = 0;
         let iva = 0;
 
-        let products_cart = localStorage.getItem('product') ? JSON.parse(localStorage.getItem('product')) : [];
+        let products_cart = localStorage.getItem('product_ezviz_asy') ? JSON.parse(localStorage.getItem('product_ezviz_asy')) : [];
 
         products_cart.map( product => {
             let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
@@ -213,6 +220,8 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
         setTotal(total);
         setIva(iva);
         //getClientsAPI();
+
+        addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
     }, []);
 
 
@@ -352,7 +361,7 @@ export const Cart = ({ productsCart, setProductsCart, iva, setIva, subtotal, set
                     </div>
                     
                     <div className="col col-33 col-mb-100 position-relative">
-                        <RegisterSend iva={iva} total={total} subtotal={subtotal} productsCart={productsCart} setProductsCart={setProductsCart} setAlertSuccess={setAlertSuccess} setBlockOptions={setBlockOptions}/>
+                        <RegisterSend setTotalDiscount={setTotalDiscount} totalDiscount={totalDiscount} discountPurchase={discountPurchase} setDiscountPurchase={setDiscountPurchase} iva={iva} setTotal={setTotal} total={total} subtotal={subtotal} productsCart={productsCart} setProductsCart={setProductsCart} setAlertSuccess={setAlertSuccess} setBlockOptions={setBlockOptions}/>
                     </div>
                 </div>
 
