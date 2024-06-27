@@ -28,7 +28,7 @@ export const Footer = () => {
     </footer>
     <div className='load load-display'> 
         <div className='logo-display'>
-            <img src='./img/Ezviz-Logo.svg'></img>
+            <img src='./img/EZVIZ-Logo.svg'></img>
         </div>
         <div className='loader'></div>
     </div>
