@@ -129,10 +129,11 @@ export const ProductsCategory = ({discountPurchase, setTotalDiscount, category =
                         </article>
                     </div>
                 )
-            }).slice(firstIndex, lastIndex)
+            })/* .slice(firstIndex, lastIndex) */
         )}
 
-        <div className='col col-100 col-products'>
+        {/* Paginación */}
+        {/* <div className='col col-100 col-products'>
             <nav aria-label="pagination-products">
                 <ul className="pagination">
                     <li className="page-item">
@@ -161,7 +162,7 @@ export const ProductsCategory = ({discountPurchase, setTotalDiscount, category =
                     </li>
                 </ul>
             </nav>
-        </div>
+        </div> */}
         
 
         <div className='alert'>
