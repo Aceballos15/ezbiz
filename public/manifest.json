@@ -18,8 +18,8 @@
       "sizes": "512x512"
     },
     {
-      "src": "EZVIZ-Logo.svg",
-      "type": "image/svg",
+      "src": "EZVIZ-Logo.png",
+      "type": "image/png",
       "sizes": "192x192"
       
     }
