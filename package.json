@@ -1,7 +1,6 @@
 {
   "type": "module",
   "name": "Ezviz",
-  
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -16,7 +15,7 @@
     "webpack-dev-server": "^4.15.2"
   },
   "scripts": {
-    "start": "PORT=3001 react-scripts start",
+    "start": "react-scripts start",
     "build": "react-scripts build webpack",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
