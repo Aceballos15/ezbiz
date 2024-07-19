@@ -44,7 +44,7 @@ export const Cart = ({ discountPurchase, setDiscountPurchase, setTotalDiscount, 
         localStorage.setItem('product_ezviz_asy', JSON.stringify(new_products_cart));
 
         new_products_cart.map(product => {
-            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
 
             subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
@@ -81,7 +81,7 @@ export const Cart = ({ discountPurchase, setDiscountPurchase, setTotalDiscount, 
                 }
             }
 
-            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
 
             subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
@@ -112,7 +112,7 @@ export const Cart = ({ discountPurchase, setDiscountPurchase, setTotalDiscount, 
                 
             }
         
-            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
 
             subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
@@ -156,7 +156,7 @@ export const Cart = ({ discountPurchase, setDiscountPurchase, setTotalDiscount, 
                 }
             }
 
-            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
 
             subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
@@ -209,7 +209,7 @@ export const Cart = ({ discountPurchase, setDiscountPurchase, setTotalDiscount, 
         let products_cart = localStorage.getItem('product_ezviz_asy') ? JSON.parse(localStorage.getItem('product_ezviz_asy')) : [];
 
         products_cart.map( product => {
-            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
+            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
 
             subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;

@@ -44,8 +44,8 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
 
         listCart.map( product => {
 
-            let iva_decimal = parseInt(product.GrupoDeProductos.IVA1) / 100;
-            console.log(iva_decimal);
+            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
+            console.log(product.GrupoDeProductos);
             subtotal += product.precio - (iva_decimal * product.precio);
             total += product.precio;
             iva += iva_decimal * product.precio;
@@ -56,7 +56,7 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
         localStorage.setItem('product_ezviz_asy', JSON.stringify([data[0]]));
         setProductsCart([data[0]]);
 
-        let iva_decimal = parseInt(data[0].GrupoDeProductos.IVA1) / 100;
+        let iva_decimal = data[0].GrupoDeProductos.IVA1 === null ? parseInt(data[0].GrupoDeProductos.IVA1) / 100 : 0;
 
         subtotal += data[0].precio - (iva_decimal * data[0].precio);
         total += data[0].precio;
