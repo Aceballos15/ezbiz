@@ -156,7 +156,7 @@ export const RegisterSend = ({discountPurchase, setDiscountPurchase, totalDiscou
 
         let verify = verifyInputs(data);
 
-        let city = citiesDep.filter( city => {
+        let city = citiesDep.length !== 0 && citiesDep.filter( city => {
 
             city_api = city.ID;
 
@@ -166,7 +166,7 @@ export const RegisterSend = ({discountPurchase, setDiscountPurchase, totalDiscou
 
 
         
-        city.map( city => {
+        let cityList = city && city.map( city => {
             city_api = city.ID.toString();
         })
  
@@ -247,7 +247,7 @@ export const RegisterSend = ({discountPurchase, setDiscountPurchase, totalDiscou
 
         let verify = verifyInputs(data);
 
-        let city = citiesDep.filter( city => {
+        let city = citiesDep.length !== 0 && citiesDep.filter( city => {
 
             city_api = city.ID;
 
@@ -257,7 +257,7 @@ export const RegisterSend = ({discountPurchase, setDiscountPurchase, totalDiscou
 
 
         
-        city.map( city => {
+        let cityList = city && city.map( city => {
             city_api = city.ID.toString();
         })
      
