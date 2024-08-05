@@ -685,6 +685,11 @@ img {
     transition: all 0.4 ease;
 }
 
+
+.products__options.prom {
+    bottom: 1.7rem;
+}
+
 .products__card-product:hover .products__options {
     opacity: 1;
     transition: all 0.4s ease;

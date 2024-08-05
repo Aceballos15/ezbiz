@@ -65,7 +65,12 @@ export const ProductsCategory = ({discountPurchase, setTotalDiscount, category =
         progress.classList.remove('active'); 
     }
 
+    const getPercentage = (price_before, price) => {
 
+        let desc = parseInt( (price * 100) / price_before );
+
+        return 100 - desc;
+    }
 
 
     // Paginación
@@ -93,7 +98,14 @@ export const ProductsCategory = ({discountPurchase, setTotalDiscount, category =
                                 <div className="products__cont-price-cart">
                                     <div className="products__cont-price">
                                         {/* Cambiar para mas adelante el precio del producto */}
-                                        <span className="products__price">{formatNumber(product.Precio_Mayorista, true) } COP</span>
+                                        { product.Promosion !== null && product.Promosion === "Si" && product.PrecioComparacion !== 0 && product.PrecioComparacion !== null ? (
+                                            <>
+                                                <span className="products__price">{formatNumber(product.PrecioComparacion, true)} COP</span>
+                                                <span className="products__price-before">{formatNumber(product.Precio_Mayorista, true) } COP</span>
+                                            </>
+                                        ) : (
+                                            <span className="products__price">{formatNumber(product.Precio_Mayorista, true) } COP</span>
+                                        )}
                                         {/* <span className="products__price-before">$79.900 COP</span> */}
                                     </div>
                                     
@@ -102,11 +114,13 @@ export const ProductsCategory = ({discountPurchase, setTotalDiscount, category =
                                 
                             </div>
 
-                            {/* <div className="products__discounts">
-                                <span>-37% OFF</span>
-                            </div> */}
+                            { product.Promosion !== null && product.Promosion === "Si" && product.PrecioComparacion !== 0 && product.PrecioComparacion !== null ? (
+                                <div className="products__discounts">
+                                    <span>-{ getPercentage(product.Precio_Mayorista, product.PrecioComparacion) }% OFF</span>
+                                </div>
+                            ) : ""}
 
-                            <div className="products__options">
+                            <div className={product.Promosion !== null && product.Promosion === "Si" && product.PrecioComparacion !== 0 && product.PrecioComparacion !== null ? "products__options prom" : "products__options" }>
                                 {/* <button className="btn btn-blue">Comprar</button> */}
                                 <div className="products__options-product" onClick={() => openProductDetail(product)}>
                                      <img src="./img/icon-details.svg" alt="" />
