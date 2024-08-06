@@ -56,12 +56,23 @@ useEffect( () => {
 
     const getProductsAPI = async() => {
 
-        const URL_BASE = "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22";
-        const products_api = await fetch(URL_BASE);
-        const {data} = await products_api.json();
-        
-        setProducts(await data);
-        setListProducts(await data);
+        try {
+            const URL_BASE = "https://zoho.accsolutions.tech/API/v1/Productos_Ezviz?where=Marca.Marca%3D%22ezviz%22";
+            const products_api = await fetch(URL_BASE);
+            const {data} = await products_api.json();
+
+            const order_products = data.sort( (a, b) => {
+                if (a.Promosion === 'Si' && b.Promosion !== 'Si') return -1;
+                if (a.Promosion !== 'Si' && b.Promosion === 'Si') return 1;
+                return 0;
+            } );
+            
+            setProducts(await order_products);
+            setListProducts(await order_products);
+            
+        } catch (error) {
+            console.log(`Error al traer los productos - Error: ${error.message}`); 
+        }
     
     }
 
