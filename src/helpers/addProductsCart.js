@@ -14,70 +14,77 @@ export const addProductCart = async(e,id, URL_BASE, setProductsCart, setTotal, s
     }
 
     //Llamado de la API por su ID
-    let URL_API = URL_BASE + 'ID%3D' + id;
-    let product_api = await fetch(URL_API);
-    let {data} = await product_api.json();
 
-    let total = 0;
-    let subtotal = 0;
-    let iva = 0;
+    try {
+        let URL_API = URL_BASE + 'ID%3D' + id;
+        let product_api = await fetch(URL_API);
+        let {data} = await product_api.json();
     
-//Lista de productos en carrito en el localstorage
-    let listCart = JSON.parse(localStorage.getItem('product_ezviz_asy'));
-
-    data[0].quantity = 1;
-    data[0].precio = parseInt(data[0].Precio_Mayorista);
-
-     //  Verifica e inserta si el listado de productos en el carrito ya existe
-    if (Array.isArray(listCart)) {
+        let total = 0;
+        let subtotal = 0;
+        let iva = 0;
         
-
-        let search_product = listCart.find(product => product.ID === id);
-
-        if (!search_product) {
-
-            listCart.push(data[0]);
-
-            localStorage.setItem('product_ezviz_asy', JSON.stringify(listCart));
-            setProductsCart(listCart);
+    //Lista de productos en carrito en el localstorage
+        let listCart = JSON.parse(localStorage.getItem('product_ezviz_asy'));
+    
+        data[0].quantity = 1;
+        data[0].precio = parseInt(data[0].Precio_Mayorista);
+    
+         //  Verifica e inserta si el listado de productos en el carrito ya existe
+        if (Array.isArray(listCart)) {
+            
+    
+            let search_product = listCart.find(product => product.ID === id);
+    
+            if (!search_product) {
+    
+                listCart.push(data[0]);
+    
+                localStorage.setItem('product_ezviz_asy', JSON.stringify(listCart));
+                setProductsCart(listCart);
+            }
+    
+            listCart.map( product => {
+    
+                let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
+                console.log(product.GrupoDeProductos);
+                subtotal += product.precio - (iva_decimal * product.precio);
+                total += product.precio;
+                iva += iva_decimal * product.precio;
+            });
+    
+    
+        }else{
+            localStorage.setItem('product_ezviz_asy', JSON.stringify([data[0]]));
+            setProductsCart([data[0]]);
+    
+            let iva_decimal = data[0].GrupoDeProductos.IVA1 === null ? parseInt(data[0].GrupoDeProductos.IVA1) / 100 : 0;
+    
+            subtotal += data[0].precio - (iva_decimal * data[0].precio);
+            total += data[0].precio;
+            iva += iva_decimal * data[0].precio;
+    
         }
+    
+        const alert = document.querySelector('.alert');
+        const progress = document.querySelector('.alert-progress');
+    
+        alert.classList.add('active');
+        progress.classList.add('active');
+    
+        setTimeout( () => {
+            alert.classList.remove('active');  
+            progress.classList.remove('active');         
+        }, 4000)
+    
+        setTotal(total);
+        setSubtotal(subtotal);
+        setIva(iva);
+    
+        addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
 
-        listCart.map( product => {
-
-            let iva_decimal = product.GrupoDeProductos.IVA1 === null ? parseInt(product.GrupoDeProductos.IVA1) / 100 : 0;
-            console.log(product.GrupoDeProductos);
-            subtotal += product.precio - (iva_decimal * product.precio);
-            total += product.precio;
-            iva += iva_decimal * product.precio;
-        });
-
-
-    }else{
-        localStorage.setItem('product_ezviz_asy', JSON.stringify([data[0]]));
-        setProductsCart([data[0]]);
-
-        let iva_decimal = data[0].GrupoDeProductos.IVA1 === null ? parseInt(data[0].GrupoDeProductos.IVA1) / 100 : 0;
-
-        subtotal += data[0].precio - (iva_decimal * data[0].precio);
-        total += data[0].precio;
-        iva += iva_decimal * data[0].precio;
-
+    }catch(error) {
+        console.log("Error al agregar un producto al carrito - error:" + error.message);
     }
 
-    const alert = document.querySelector('.alert');
-    const progress = document.querySelector('.alert-progress');
-
-    alert.classList.add('active');
-    progress.classList.add('active');
-
-    setTimeout( () => {
-        alert.classList.remove('active');  
-        progress.classList.remove('active');         
-    }, 4000)
-
-    setTotal(total);
-    setSubtotal(subtotal);
-    setIva(iva);
-
-    addDiscountPurchase(total, discountPurchase, setTotal, setTotalDiscount);
 } 
